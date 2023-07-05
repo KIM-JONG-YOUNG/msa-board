@@ -15,5 +15,6 @@
 		<module>msa-board-client-member</module>
 		<module>msa-board-client-post</module>
 		<module>msa-board-client-comment</module>
+		<module>msa-board-client-token</module>
 	</modules>
 </project>
