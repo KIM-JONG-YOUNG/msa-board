@@ -10,4 +10,10 @@
 	<artifactId>msa-board-domains</artifactId>
 	<packaging>pom</packaging>
 	<description>Spring Boot MSA Multi Module Board - Domain List</description>
+	<modules>
+		<module>msa-board-domain-core</module>
+		<module>msa-board-domain-member</module>
+		<module>msa-board-domain-post</module>
+		<module>msa-board-domain-comment</module>
+	</modules>
 </project>

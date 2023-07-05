@@ -4,15 +4,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>enu.jong</groupId>
-		<artifactId>msa-board</artifactId>
+		<artifactId>msa-board-domains</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
-	<artifactId>msa-board-apps</artifactId>
-	<packaging>pom</packaging>
-	<description>Spring Boot MSA Multi Module Board - Application List</description>
-	<modules>
-		<module>msa-board-app-core</module>
-		<module>msa-board-app-admin</module>
-		<module>msa-board-app-user</module>
-	</modules>
+	<artifactId>msa-board-domain-core</artifactId>
+	<description>Spring Boot MSA Multi Module Board - Domain Core</description>
 </project>

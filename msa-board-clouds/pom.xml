@@ -10,4 +10,8 @@
 	<artifactId>msa-board-clouds</artifactId>
 	<packaging>pom</packaging>
 	<description>Spring Boot MSA Multi Module Board - Cloud Environments</description>
+	<modules>
+		<module>msa-board-cloud-config</module>
+		<module>msa-board-cloud-eureka</module>
+	</modules>
 </project>

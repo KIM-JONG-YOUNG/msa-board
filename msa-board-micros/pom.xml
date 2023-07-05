@@ -10,4 +10,11 @@
 	<artifactId>msa-board-micros</artifactId>
 	<packaging>pom</packaging>
 	<description>Spring Boot MSA Multi Module Board - Micro Service List</description>
+	<modules>
+		<module>msa-board-micro-core</module>
+		<module>msa-board-micro-member</module>
+		<module>msa-board-micro-post</module>
+		<module>msa-board-micro-comment</module>
+		<module>msa-board-micro-token</module>
+	</modules>
 </project>
