@@ -13,6 +13,7 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Spring Boot MAS Multi Module Board</description>
+
 	<modules>
 		<module>msa-board-common</module>
 		<module>msa-board-redis</module>
@@ -24,4 +25,189 @@
 		<module>msa-board-micros</module>
 		<module>msa-board-apps</module>
 	</modules>
+
+	<properties>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>2021.0.7</spring-cloud.version>
+		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
+		<spring-boot-redisson.version>3.17.7</spring-boot-redisson.version>
+		<mapstruct.version>1.5.2.Final</mapstruct.version>
+		<jjwt.version>0.9.1</jjwt.version>
+	</properties>
+
+	<dependencies>
+	
+		<!-- Spring Boot Starter -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<!-- Spring Boot Dev Tools -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
+		<!-- Spring Boot Configuration Processor -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- Spring Boot Test -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- Lombok -->
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<!-- Commons Lang3 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		
+	</dependencies>
+
+	<dependencyManagement>
+		<dependencies>
+		
+			<!-- Spring Cloud -->
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<!-- Spring Boot Redisson -->
+			<dependency>
+				<groupId>org.redisson</groupId>
+				<artifactId>redisson-spring-boot-starter</artifactId>
+				<version>${spring-boot-redisson.version}</version>
+			</dependency>
+			<!-- Spring Open API UI -->
+			<dependency>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-ui</artifactId>
+				<version>${springdoc-openapi-ui.version}</version>
+			</dependency>
+			
+			<!-- Mapstruct -->
+			<dependency>
+				<groupId>org.mapstruct</groupId>
+				<artifactId>mapstruct</artifactId>
+				<version>${mapstruct.version}</version>
+			</dependency>
+			<!-- Jwt -->
+			<dependency>
+				<groupId>io.jsonwebtoken</groupId>
+				<artifactId>jjwt</artifactId>
+				<version>${jjwt.version}</version>
+			</dependency>
+			
+			<!-- MSA Board Common -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Redis -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-redis</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Kafka -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-kafka</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board WEB -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-web</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- MSA Board Domain Core -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-domain-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Member Domain -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-domain-member</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Post Domain -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-domain-post</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Comment Domain -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-domain-comment</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- MSA Board Client Core -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Member Client -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-member</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Token Client -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-token</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Post Client -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-post</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- MSA Board Comment Client -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-comment</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- MSA Board Micro Service Core -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-micro-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<!-- MSA Board Application Core -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-app-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+		</dependencies>
+	</dependencyManagement>
+
 </project>
