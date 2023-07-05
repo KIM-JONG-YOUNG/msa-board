@@ -13,4 +13,15 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<description>Spring Boot MAS Multi Module Board</description>
+	<modules>
+		<module>msa-board-common</module>
+		<module>msa-board-redis</module>
+		<module>msa-board-kafka</module>
+		<module>msa-board-web</module>
+		<module>msa-board-clouds</module>
+		<module>msa-board-domains</module>
+		<module>msa-board-clients</module>
+		<module>msa-board-micros</module>
+		<module>msa-board-apps</module>
+	</modules>
 </project>
