@@ -33,14 +33,14 @@ public abstract class BaseEntity {
 	private LocalDateTime updatedDateTime;
 
 	@Setter
-	@Convert(converter = StateCodeAttributeConverter.class)
+	@Convert(converter = StateAttributeConverter.class)
 	@Column(name = "state", length = 1, nullable = false)
 	private State state = State.ACTIVE;
 
 	@Converter
-	public static class StateCodeAttributeConverter extends DBCodeAttributeConverter<State, Integer> {
+	public static class StateAttributeConverter extends DBCodeAttributeConverter<State, Integer> {
 
-		public StateCodeAttributeConverter() {
+		public StateAttributeConverter() {
 			super(State.class, false);
 		}
 	}
