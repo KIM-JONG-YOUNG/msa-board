@@ -17,6 +17,7 @@
 		<module>msa-board-client-post</module>
 		<module>msa-board-client-comment</module>
 		<module>msa-board-client-token</module>
+		<module>msa-board-client-search</module>
 	</modules>
 
 	<dependencies>

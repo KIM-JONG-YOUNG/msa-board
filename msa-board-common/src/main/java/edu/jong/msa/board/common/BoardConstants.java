@@ -17,6 +17,7 @@ public final class BoardConstants {
 	
 	public static final class URLPaths {
 		public static final String MEMBER_URL = "/members";
+		public static final String SEARCH_URL = "/search";
 	}
 	
 	public static final class CachingKeys {
@@ -31,6 +32,7 @@ public final class BoardConstants {
 	
 	public static final class ServiceNames {
 		public static final String MEMBER_SERVICE = "micro-service";
+		public static final String SEARCH_SERVICE = "micro-search";
 	}
 	
 }
