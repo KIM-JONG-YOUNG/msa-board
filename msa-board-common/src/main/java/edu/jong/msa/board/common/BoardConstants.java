@@ -14,4 +14,8 @@ public final class BoardConstants {
 		public static final String DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 	}
 	
+	public static final class URLPaths {
+		public static final String MEMBER_URL = "/members";
+	}
+	
 }
