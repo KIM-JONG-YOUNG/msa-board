@@ -9,4 +9,13 @@
 	</parent>
 	<artifactId>msa-board-client-token</artifactId>
 	<description>Spring Boot MSA Multi Module Board - Token Client</description>
+
+	<dependencies>
+		<!-- MSA Board Client Core -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-client-core</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
