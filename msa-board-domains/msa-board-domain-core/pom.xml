@@ -10,4 +10,12 @@
 	<artifactId>msa-board-domain-core</artifactId>
 	<description>Spring Boot MSA Multi Module Board - Domain Core</description>
 
+	<dependencies>
+		<!-- MSA Board Common -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-common</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
