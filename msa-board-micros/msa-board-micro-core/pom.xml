@@ -1,10 +1,26 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-	<groupId>edu.jong</groupId>
-    <artifactId>msa-board-micros</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>msa-board-micro-core</artifactId>
-  <description>Spring Boot MSA Multi Module Board - Micro Service Core</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>edu.jong</groupId>
+		<artifactId>msa-board-micros</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>msa-board-micro-core</artifactId>
+	<description>Spring Boot MSA Multi Module Board - Micro Service Core</description>
+
+	<dependencies>
+		<!-- MSA Board Client Core -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-client-core</artifactId>
+		</dependency>
+		<!-- MSA Board Redis -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-redis</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
