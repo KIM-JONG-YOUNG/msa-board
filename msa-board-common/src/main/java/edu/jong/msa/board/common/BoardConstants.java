@@ -6,6 +6,7 @@ public final class BoardConstants {
 		public static final String ROOT_PACKAGE 		= "edu.jong.msa.board";
 		public static final String ENTITY_PACKAGE 		= "edu.jong.msa.board.entity";
 		public static final String REPOSITORY_PACKAGE 	= "edu.jong.msa.board.repository";
+		public static final String CLIENT_PACKAGE 		= "edu.jong.msa.board.client";
 	}
 	
 	public static final class Patterns {

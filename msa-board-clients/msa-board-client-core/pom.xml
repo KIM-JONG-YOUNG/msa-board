@@ -9,4 +9,13 @@
 	</parent>
 	<artifactId>msa-board-client-core</artifactId>
 	<description>Spring Boot MSA Multi Module Board - Client Core</description>
+
+	<dependencies>
+		<!-- MSA Board WEB -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-web</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>

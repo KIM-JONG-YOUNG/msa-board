@@ -10,6 +10,7 @@
 	<artifactId>msa-board-clients</artifactId>
 	<packaging>pom</packaging>
 	<description>Spring Boot MSA Multi Module Board - Feign Client and Swagger List</description>
+	
 	<modules>
 		<module>msa-board-client-core</module>
 		<module>msa-board-client-member</module>
@@ -17,4 +18,18 @@
 		<module>msa-board-client-comment</module>
 		<module>msa-board-client-token</module>
 	</modules>
+
+	<dependencies>
+		<!-- Spring Cloud Feign -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-openfeign</artifactId>
+		</dependency>
+		<!-- Spring Open API UI -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-ui</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
