@@ -26,6 +26,11 @@
 			<groupId>edu.jong</groupId>
 			<artifactId>msa-board-domain-member</artifactId>
 		</dependency>
+		<!-- MSA Board Kafka -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-kafka</artifactId>
+		</dependency>
 	</dependencies>
 
 </project>

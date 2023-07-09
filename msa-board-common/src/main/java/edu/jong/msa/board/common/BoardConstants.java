@@ -24,5 +24,9 @@ public final class BoardConstants {
 		public static final String MEMBER_LOCK_KEY 			= "member-lock::";
 		public static final String MEMBER_KEY 				= "member::";
 	}
+
+	public static final class TopicNames {
+		public static final String MEMBER_TOPIC = "member-topic";
+	}
 	
 }

@@ -15,9 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.jong.msa.board.client.request.MemberParam;
 import edu.jong.msa.board.client.response.MemberDetails;
 import edu.jong.msa.board.common.BoardConstants.CachingKeys;
+import edu.jong.msa.board.common.BoardConstants.TopicNames;
 import edu.jong.msa.board.common.utils.ObjectMapperUtils;
 import edu.jong.msa.board.domain.entity.MemberEntity;
 import edu.jong.msa.board.domain.repository.MemberEntityRepository;
+import edu.jong.msa.board.kafka.dto.KafkaMessage;
+import edu.jong.msa.board.kafka.producer.KafkaMessageProducer;
 import edu.jong.msa.board.micro.mapper.MemberEntityMapper;
 import edu.jong.msa.board.redis.service.RedissonLockService;
 import edu.jong.msa.board.web.exception.ParamValidException;
@@ -37,15 +40,7 @@ public class MemberServiceImpl implements MemberService {
 	
 	private final RedisTemplate<String, String> redisTemplate;
 	
-	private MemberDetails caching(MemberDetails details) {
-		
-		String cachingKey = CachingKeys.MEMBER_KEY + details.getId();
-		String cachingVal = ObjectMapperUtils.toJson(details);
-		
-		redisTemplate.opsForValue().set(cachingKey, cachingVal, 60, TimeUnit.SECONDS);
-
-		return details;
-	}
+	private final KafkaMessageProducer producer;
 	
 	@Transactional
 	@Override
@@ -60,7 +55,14 @@ public class MemberServiceImpl implements MemberService {
 				MemberEntity entity = repository.save(
 						mapper.encodeEntity(encoder, mapper.toEntity(param)));
 
-				return caching(mapper.toDetails(entity)).getId();
+				String cachingKey = CachingKeys.MEMBER_KEY + entity.getId();
+				String cachingVal = ObjectMapperUtils.toJson(mapper.toDetails(entity));
+				
+				redisTemplate.opsForValue().set(cachingKey, cachingVal, 60, TimeUnit.SECONDS);
+				
+				producer.send(new KafkaMessage<>(TopicNames.MEMBER_TOPIC, entity));
+
+				return entity.getId();
 			});
 		} else {
 			throw new EntityExistsException("이미 계정이 존재합니다.");
@@ -85,10 +87,18 @@ public class MemberServiceImpl implements MemberService {
 						mapper.updateEntity(param, entity));
 			} else {
 				updatedEntity = repository.save(
-						mapper.encodeEntity(encoder, mapper.updateEntity(param, entity)));
+						mapper.encodeEntity(encoder, 
+								mapper.updateEntity(param, entity)));
 			}
+
+			String cachingKey = CachingKeys.MEMBER_KEY + entity.getId();
+			String cachingVal = ObjectMapperUtils.toJson(mapper.toDetails(updatedEntity));
 			
-			return caching(mapper.toDetails(updatedEntity)).getId();
+			redisTemplate.opsForValue().set(cachingKey, cachingVal, 60, TimeUnit.SECONDS);
+			
+			producer.send(new KafkaMessage<>(TopicNames.MEMBER_TOPIC, entity));
+
+			return updatedEntity.getId();
 		});
 	}
 
@@ -103,10 +113,15 @@ public class MemberServiceImpl implements MemberService {
 			return ObjectMapperUtils.toObject(cachingVal, MemberDetails.class);
 		} catch (Exception e) {
 			
-			MemberEntity entity = repository.findById(id)
-					.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다."));
+			MemberDetails details = mapper.toDetails(repository.findById(id)
+					.orElseThrow(() -> new EntityNotFoundException("존재하지 않는 회원입니다.")));
+			
+			String cachingKey = CachingKeys.MEMBER_KEY + details.getId();
+			String cachingVal = ObjectMapperUtils.toJson(details);
+			
+			redisTemplate.opsForValue().set(cachingKey, cachingVal, 60, TimeUnit.SECONDS);
 
-			return caching(mapper.toDetails(entity));
+			return details;
 		}
 	}
 
