@@ -87,7 +87,7 @@ services:
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
-      - KAFKA_BROKER_ID=1
+      - KAFKA_BROKER_ID=3
       - KAFKA_ZOOKEEPER_CONNECT=kafka-zookeeper:2181
       - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT
       - KAFKA_LISTENERS=INTERNAL://kafka-broker-3:9092,EXTERNAL://0.0.0.0:19093
@@ -103,3 +103,4 @@ services:
       - ./msa-board-docker-kafka-logs/broker-3:/logs
     depends_on:
       - kafka-zookeeper
+      
