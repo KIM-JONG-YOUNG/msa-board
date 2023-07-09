@@ -2,6 +2,7 @@ package edu.jong.msa.board.client.operations;
 
 import java.util.UUID;
 
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -13,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import edu.jong.msa.board.client.response.SessionTokens;
 import edu.jong.msa.board.client.response.TokenInfo;
 import edu.jong.msa.board.common.BoardConstants.HeaderNames;
+import edu.jong.msa.board.common.BoardConstants.ServiceNames;
 import edu.jong.msa.board.common.BoardConstants.URLPaths;
 
+@FeignClient(ServiceNames.TOKEN_SERVICE)
 public interface TokenOperations {
 
 	@PostMapping(value = URLPaths.TOKEN_URL + "/{memberId}",
