@@ -1,0 +1,13 @@
+server:
+  port: 8002
+
+spring:
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://localhost:23306/msa_board
+      username: root
+      password: root
+
+springdoc:
+  title: Search Micro Service RESTful API
+  version: 1.0.0

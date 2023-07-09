@@ -197,6 +197,12 @@
 				<artifactId>msa-board-client-comment</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<!-- MSA Board Search Client -->
+			<dependency>
+				<groupId>edu.jong</groupId>
+				<artifactId>msa-board-client-search</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<!-- MSA Board Micro Service Core -->
 			<dependency>

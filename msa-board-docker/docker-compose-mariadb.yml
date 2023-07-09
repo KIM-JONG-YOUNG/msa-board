@@ -22,3 +22,20 @@ services:
     volumes:
       - ./msa-board-docker-mariadb-conf:/etc/mysql/conf.d
       - ./msa-board-docker-mariadb-data/member:/var/lib/mysql
+      
+  mariadb-search:
+    image: mariadb:10.3
+    hostname: mariadb-search
+    container_name: mariadb-search
+    networks:
+      - mariadb-network
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      - MYSQL_DATABASE=msa_board
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 23306:3306
+    volumes:
+      - ./msa-board-docker-mariadb-conf:/etc/mysql/conf.d
+      - ./msa-board-docker-mariadb-data/search:/var/lib/mysql

@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: micro-search
+  config:
+    import: optional:configserver:http://localhost:18888
+  cloud:
+    config:
+      label: local
+  profiles:
+    active:
+    - micro-common
+    - micro-search
+
+logging:
+  config: classpath:logback-${spring.application.name}.xml

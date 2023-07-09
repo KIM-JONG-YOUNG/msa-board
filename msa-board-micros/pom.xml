@@ -17,6 +17,7 @@
 		<module>msa-board-micro-post</module>
 		<module>msa-board-micro-comment</module>
 		<module>msa-board-micro-token</module>
+		<module>msa-board-micro-search</module>
 	</modules>
 
 	<dependencies>

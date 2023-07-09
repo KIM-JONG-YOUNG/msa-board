@@ -8,6 +8,8 @@ import edu.jong.msa.board.common.BoardConstants.Patterns;
 import edu.jong.msa.board.common.type.DBCodeEnum.Gender;
 import edu.jong.msa.board.common.type.DBCodeEnum.Group;
 import edu.jong.msa.board.common.type.DBCodeEnum.State;
+import edu.jong.msa.board.common.type.SortEnum.MemberSort;
+import edu.jong.msa.board.common.type.SortEnum.Order;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -40,4 +42,8 @@ public class MemberCondition extends PagingCondition {
 	@JsonFormat(pattern = Patterns.DATE_FORMAT)
 	private LocalDate to;
 
+	private MemberSort sort;
+	
+	private Order order;
+	
 }
