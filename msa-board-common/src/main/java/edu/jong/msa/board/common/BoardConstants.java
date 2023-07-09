@@ -29,4 +29,8 @@ public final class BoardConstants {
 		public static final String MEMBER_TOPIC = "member-topic";
 	}
 	
+	public static final class ServiceNames {
+		public static final String MEMBER_SERVICE = "micro-service";
+	}
+	
 }
