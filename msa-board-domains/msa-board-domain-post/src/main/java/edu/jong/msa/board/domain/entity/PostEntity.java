@@ -33,7 +33,6 @@ public class PostEntity extends BaseEntity {
 	@Setter
 	@Column(name = "post_title",
 			length = 300,
-			unique = true,
 			nullable = false)
 	private String title;
 	
