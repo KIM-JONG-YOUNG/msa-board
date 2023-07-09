@@ -1,0 +1,22 @@
+server:
+  port: 8888  # 서버 실행 포트 
+
+spring:
+  application:
+    name: cloud-config
+  profiles: 
+    active: native
+#    active: git
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: file:../../msa-board-configs  # 설정 파일 로컬 경로 
+        git: 
+          uri: https://github.com/KIM-JONG-YOUNG/board  # Git Repository 주소 
+          default-label: master                         # Branch 정보
+          delete-untracked-branches: true               # Only Remote Repository 사용 여부 
+          search-paths: board-configs                   # Git Repository Folder 명
+
+logging:
+  config: classpath:logback-${spring.application.name}.xml
