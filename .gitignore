@@ -201,3 +201,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/windows,macos,maven,web,java,eclipse,git
+
+# docker git ignore
+msa-board-docker/*-logs/
+msa-board-docker/*-data/
+
