@@ -9,4 +9,13 @@
 	</parent>
 	<artifactId>msa-board-domain-comment</artifactId>
 	<description>Spring Boot MSA Multi Module Board - Comment Domain</description>
+
+	<dependencies>
+		<!-- MSA Board Domain Core -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-domain-core</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
