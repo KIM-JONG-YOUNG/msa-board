@@ -28,6 +28,7 @@
 
 	<properties>
 		<java.version>1.8</java.version>
+		<mariadb-java-client.version>2.7.9</mariadb-java-client.version>
 		<spring-cloud.version>2021.0.7</spring-cloud.version>
 		<springdoc-openapi-ui.version>1.7.0</springdoc-openapi-ui.version>
 		<spring-boot-redisson.version>3.17.7</spring-boot-redisson.version>
@@ -108,6 +109,12 @@
 				<groupId>io.jsonwebtoken</groupId>
 				<artifactId>jjwt</artifactId>
 				<version>${jjwt.version}</version>
+			</dependency>
+			<!-- MariaDB Client -->
+			<dependency>
+				<groupId>org.mariadb.jdbc</groupId>
+				<artifactId>mariadb-java-client</artifactId>
+				<version>${mariadb-java-client.version}</version>
 			</dependency>
 
 			<!-- MSA Board Common -->
