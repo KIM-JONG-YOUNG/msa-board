@@ -11,7 +11,7 @@ spring:
     config:
       server:
         native:
-          search-locations: file:/opt/micro-conf  # 설정 파일 로컬 경로 
+          search-locations: file:/opt/conf  # 설정 파일 로컬 경로 
         git: 
           uri: https://github.com/KIM-JONG-YOUNG/board  # Git Repository 주소 
           default-label: master                         # Branch 정보
