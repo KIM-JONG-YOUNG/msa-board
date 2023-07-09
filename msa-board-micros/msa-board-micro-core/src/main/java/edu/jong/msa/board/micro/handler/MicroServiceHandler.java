@@ -15,7 +15,7 @@ import edu.jong.msa.board.web.response.ErrorResponse;
 public class MicroServiceHandler {
 
 	@ExceptionHandler(ClientException.class)
-	ResponseEntity<ErrorResponse> handlerClientException(ClientException e) {
+	ResponseEntity<ErrorResponse> handleClientException(ClientException e) {
 		return ResponseEntity.status(e.getStatus())
 				.body(ErrorResponse.builder()
 						.status(e.getStatus())
@@ -27,7 +27,7 @@ public class MicroServiceHandler {
 		EntityNotFoundException.class,
 		EntityExistsException.class
 	})
-	ResponseEntity<ErrorResponse> handlerEntityException(Exception e) {
+	ResponseEntity<ErrorResponse> handleEntityException(Exception e) {
 		
 		HttpStatus status = null;
 		
