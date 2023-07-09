@@ -21,7 +21,7 @@ public abstract class DBCodeAttributeConverter<E extends Enum<E> & DBCodeEnum<V>
 	public V convertToDatabaseColumn(E attribute) {
 
 		if (!this.nullable && attribute == null) {
-			throw new IllegalArgumentException("DB의 값을 Null로 저장할 수 없습니다.");
+			throw new IllegalArgumentException("Can not save to DB as null.");
 		} else {
 			return (attribute == null) ? null : attribute.getCode();
 		}
@@ -31,7 +31,7 @@ public abstract class DBCodeAttributeConverter<E extends Enum<E> & DBCodeEnum<V>
 	public E convertToEntityAttribute(V dbData) {
 		
 		if (!this.nullable && dbData == null) {
-			throw new IllegalArgumentException("DB의 값이 Null로 저장되어 있습니다.");
+			throw new IllegalArgumentException("Data in DB is stored as null.");
 		} else {
 			return (dbData == null) ? null : ObjectMapperUtils.toDBCodeEnum(dbData, this.enumType);
 		}
