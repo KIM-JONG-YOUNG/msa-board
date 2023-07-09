@@ -18,7 +18,7 @@
 		value="${FILE_LOG_CHARSET:-${file.encoding:-UTF-8}}" />
 
 	<!-- 로그 파일 이름 -->
-	<!-- <property name="LOG_FILE_NAME" value="${spring.application.name}" /> -->
+	<property name="LOG_FILE_PATH" value="/" />
 	<springProperty name="LOG_FILE_NAME"
 		source="spring.application.name" defaultValue="application" />
 
