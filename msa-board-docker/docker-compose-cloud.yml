@@ -1,0 +1,45 @@
+version: '3'
+
+networks:
+  cloud-network:
+    name: cloud-network
+    driver: bridge
+
+services:
+  cloud-config:
+    image: openjdk:8
+    container_name: cloud-config
+    hostname: cloud-config
+    networks:
+      - cloud-network
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    ports:
+      - 18888:8888
+    volumes:
+      - ./msa-board-docker-cloud-conf:/opt/conf
+      - ./msa-board-docker-cloud-libs:/opt/libs
+      - ./msa-board-docker-cloud-logs:/opt/logs
+      - ./msa-board-docker-micro-conf:/opt/micro-conf
+    entrypoint: ['java', '-jar', '/opt/libs/msa-board-cloud-config-0.0.1-SNAPSHOT.jar']
+    command: '--spring.config.location=/opt/conf/application-cloud-config.yml'
+
+  cloud-eureka:
+    image: openjdk:8
+    container_name: cloud-eureka
+    hostname: cloud-eureka
+    networks:
+      - cloud-network
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    ports:
+      - 18761:8761
+    volumes:
+      - ./msa-board-docker-cloud-conf:/opt/conf
+      - ./msa-board-docker-cloud-libs:/opt/libs
+      - ./msa-board-docker-cloud-logs:/opt/logs
+    entrypoint: ['java', '-jar', '/opt/libs/msa-board-cloud-eureka-0.0.1-SNAPSHOT.jar']
+    command: '--spring.config.location=/opt/conf/application-cloud-eureka.yml'
+    

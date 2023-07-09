@@ -1,0 +1,24 @@
+version: '3'
+
+networks:
+  mariadb-network:
+    name: mariadb-network
+    driver: bridge
+
+services:
+  mariadb-member:
+    image: mariadb:10.3
+    hostname: mariadb-member
+    container_name: mariadb-member
+    networks:
+      - mariadb-network
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      - MYSQL_DATABASE=msa_board
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 13306:3306
+    volumes:
+      - ./msa-board-docker-mariadb-conf:/etc/mysql/conf.d
+      - ./msa-board-docker-mariadb-data/member:/var/lib/mysql

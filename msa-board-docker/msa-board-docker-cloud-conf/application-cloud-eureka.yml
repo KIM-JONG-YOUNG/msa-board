@@ -1,0 +1,14 @@
+server:
+  port: 8761  # 서버 실행 포트 
+
+spring:
+  application:
+    name: cloud-eureka
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
+
+logging:
+  config: /opt/conf/logback-${spring.application.name}.xml
