@@ -47,7 +47,8 @@ public class MemberServiceImpl implements MemberService {
 	public UUID createMember(MemberParam param) {
 		
 		if (repository.existsByUsername(param.getUsername())) {
-
+			throw new EntityExistsException("이미 계정이 존재합니다.");
+		} else {
 			String lockKey = CachingKeys.MEMBER_USERNAME_LOCK_KEY + param.getUsername();
 			
 			return lockService.excute(lockKey, 5, 3, () -> {
@@ -64,8 +65,6 @@ public class MemberServiceImpl implements MemberService {
 
 				return entity.getId();
 			});
-		} else {
-			throw new EntityExistsException("이미 계정이 존재합니다.");
 		}
 	}
 
