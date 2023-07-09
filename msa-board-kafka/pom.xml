@@ -9,4 +9,24 @@
 	</parent>
 	<artifactId>msa-board-kafka</artifactId>
 	<description>Spring Boot MSA Multi Module Board - Kafka</description>
+
+	<dependencies>
+		<!-- Spring Kafka -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka</artifactId>
+		</dependency>
+		<!-- Spring Kafka Test -->
+		<dependency>
+			<groupId>org.springframework.kafka</groupId>
+			<artifactId>spring-kafka-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- MSA Board Common -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-common</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>
