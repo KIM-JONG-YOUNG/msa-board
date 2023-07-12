@@ -16,11 +16,6 @@
 			<groupId>edu.jong</groupId>
 			<artifactId>msa-board-client-core</artifactId>
 		</dependency>
-		<!-- MSA Board Domain Core -->
-		<dependency>
-			<groupId>edu.jong</groupId>
-			<artifactId>msa-board-domain-core</artifactId>
-		</dependency>
 		<!-- MSA Board Redis -->
 		<dependency>
 			<groupId>edu.jong</groupId>
