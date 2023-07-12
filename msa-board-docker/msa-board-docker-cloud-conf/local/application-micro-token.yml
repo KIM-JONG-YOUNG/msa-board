@@ -1,0 +1,12 @@
+server:
+  port: 8003
+
+token:
+  access-secret-key: access-secret-key
+  access-expire-seconds: 60
+  refresh-secret-key: refresh-secret-key
+  refresh-expire-seconds: 600
+
+springdoc:
+  title: Token Micro Service RESTful API
+  version: 1.0.0

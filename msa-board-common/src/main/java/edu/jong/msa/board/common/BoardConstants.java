@@ -22,6 +22,9 @@ public final class BoardConstants {
 	}
 	
 	public static final class CachingKeys {
+		public static final String BLACKLIST_TOKEN_KEY 		= "blacklist-token::";
+		public static final String ACCESS_TOKEN_KEY 		= "access-token::";
+		public static final String REFRESH_TOKEN_KEY 		= "refresh-token::";
 		public static final String MEMBER_USERNAME_LOCK_KEY = "member-username::";
 		public static final String MEMBER_LOCK_KEY 			= "member-lock::";
 		public static final String MEMBER_KEY 				= "member::";

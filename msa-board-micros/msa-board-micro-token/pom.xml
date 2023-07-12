@@ -1,10 +1,36 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <parent>
-	<groupId>edu.jong</groupId>
-    <artifactId>msa-board-micros</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-  <artifactId>msa-board-micro-token</artifactId>
-  <description>Spring Boot MSA Multi Module Board - Token Micro Service</description>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>edu.jong</groupId>
+		<artifactId>msa-board-micros</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>msa-board-micro-token</artifactId>
+	<description>Spring Boot MSA Multi Module Board - Token Micro Service</description>
+
+	<dependencies>
+		<!-- MSA Board Micro Service Core -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-micro-core</artifactId>
+		</dependency>
+		<!-- MSA Board Token Client -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-client-token</artifactId>
+		</dependency>
+		<!-- MSA Board Member Client -->
+		<dependency>
+			<groupId>edu.jong</groupId>
+			<artifactId>msa-board-client-member</artifactId>
+		</dependency>
+		<!-- Jwt -->
+		<dependency>
+			<groupId>io.jsonwebtoken</groupId>
+			<artifactId>jjwt</artifactId>
+		</dependency>
+	</dependencies>
+
 </project>

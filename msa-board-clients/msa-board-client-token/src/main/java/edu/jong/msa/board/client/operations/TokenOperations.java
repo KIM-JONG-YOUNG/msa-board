@@ -22,22 +22,23 @@ public interface TokenOperations {
 
 	@PostMapping(value = URLPaths.TOKEN_URL + "/{memberId}",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<SessionTokens> generateToken(
+	ResponseEntity<SessionTokens> generateSessionTokens(
 			@PathVariable UUID memberId);
 
-	@DeleteMapping(value = URLPaths.TOKEN_URL)
-	ResponseEntity<Void> disableToken(
+	@DeleteMapping(value = { URLPaths.TOKEN_URL, URLPaths.TOKEN_URL + "/{memberId}" })
+	ResponseEntity<Void> disableSessionTokens(
+			@PathVariable(required = false) UUID memberId,
 			@RequestHeader(name = HeaderNames.ACCESS_TOKEN, required = false) String accessToken,
 			@RequestHeader(name = HeaderNames.REFRESH_TOKEN, required = false) String refreshToken);
 
 	@PostMapping(value = URLPaths.TOKEN_URL + "/refresh",
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<SessionTokens> refreshToken(
+	ResponseEntity<SessionTokens> refreshSessionTokens(
 			@RequestHeader(name = HeaderNames.REFRESH_TOKEN) String refreshToken);
 
 	@GetMapping(value = URLPaths.TOKEN_URL,
 			produces = MediaType.APPLICATION_JSON_VALUE)
-	ResponseEntity<TokenInfo> getInfoByToken(
+	ResponseEntity<TokenInfo> getInfoByAccessToken(
 			@RequestHeader(name = HeaderNames.ACCESS_TOKEN) String accessToken);
 
 }
