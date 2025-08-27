@@ -1,0 +1,5 @@
+dependencies {
+    implementation project(":msa-board-support-web")
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-server"
+}

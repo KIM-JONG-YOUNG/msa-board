@@ -1,0 +1,26 @@
+server:
+  # Port
+  port: 8005
+  # Web Error White Page
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  # Application Name
+  application:
+    name: platform-gateway
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 17617
+      reactive: true
+
+# Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}

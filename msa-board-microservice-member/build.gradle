@@ -1,0 +1,21 @@
+dependencies {
+    implementation project(":msa-board-common")
+    implementation project(":msa-board-core-kafka")
+    implementation project(":msa-board-core-redis")
+    implementation project(":msa-board-support-domain")
+    implementation project(":msa-board-support-web")
+    developmentOnly "org.springframework.boot:spring-boot-devtools"
+    implementation "org.springframework.boot:spring-boot-starter-web"
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui"
+    implementation "org.springframework.boot:spring-boot-starter-validation"
+    implementation "org.springframework.cloud:spring-cloud-starter-netflix-eureka-client"
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+    implementation "org.springframework.boot:spring-boot-starter-data-jpa"
+    implementation "com.querydsl:querydsl-jpa::jakarta"
+    implementation "org.mapstruct:mapstruct"
+    annotationProcessor "org.mapstruct:mapstruct-processor"
+    runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
+    testRuntimeOnly "com.h2database:h2"
+    testImplementation "it.ozimov:embedded-redis"
+    testImplementation "org.springframework.kafka:spring-kafka-test"
+}

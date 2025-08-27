@@ -1,0 +1,33 @@
+spring:
+
+  datasource:
+    hikari:
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:test;MODE=MySQL
+      username: username
+      password: password
+
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:jpa/schema-member.sql
+        - classpath:jpa/schema-post.sql
+        - classpath:jpa/schema-comment.sql
+
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+    defer-datasource-initialization: false
+
+  cloud:
+    discovery:
+      enabled: false
+    config:
+      enabled: false

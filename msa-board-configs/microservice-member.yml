@@ -1,0 +1,127 @@
+server:
+  # Port
+  port: 8001
+  # Web Error White Page
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  # Web Resource Mapping
+  web:
+    resources:
+      add-mappings: false
+  # Virtual Threads
+  threads:
+    virtual:
+      enabled: true
+  # Redis
+  data:
+    redis:
+      reactive: false
+  # DB
+  datasource:
+    hikari:
+      driver-class-name: org.mariadb.jdbc.Driver
+  # JPA
+  jpa:
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        use_sql_comments: true
+
+# Swagger
+springdoc:
+  api-docs:
+    resolve-enum-as-ref: true
+  swagger-ui:
+    operations-sorter: alpha
+    tags-sorter: alpha
+    display-request-duration: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+
+# Eureka
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+
+# Actuator
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - env
+          - health
+          - refresh
+          - beans
+          - loggers
+
+---
+
+spring:
+  # Profile
+  config:
+    activate:
+      on-profile: dev
+  # Kafka
+  kafka:
+    bootstrap-servers: localhost:19091
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 17617
+  # DB
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://localhost:13306/microservice
+      username: root
+      password: root
+
+# Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}
+    status-page-url: http://localhost:${server.port}/swagger-ui/index.html
+
+---
+
+spring:
+  # Profile
+  config:
+    activate:
+      on-profile: prod
+  # Kafka
+  kafka:
+    bootstrap-servers: localhost:19091
+  # Redis
+  data:
+    redis:
+      host: localhost
+      port: 17617
+      reactive: false
+  # DB
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mariadb://localhost:13306/microservice
+      username: root
+      password: root
+
+# Eureka
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
+  instance:
+    instance-id: ${spring.application.name}
+    status-page-url: http://localhost:${server.port}/swagger-ui/index.html

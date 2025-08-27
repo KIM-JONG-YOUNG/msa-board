@@ -1,0 +1,17 @@
+# Port
+server:
+  port: 8888
+
+spring:
+  # Application Name
+  application:
+    name: platform-config
+  # Config Location
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: msa-board-configs
+

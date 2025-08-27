@@ -1,0 +1,130 @@
+version: "3.8"
+
+services:
+
+  msa-board-redis-cluster-node-1:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-1
+    hostname: msa-board-redis-cluster-node-1
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-1:/data
+
+  msa-board-redis-cluster-node-2:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-2
+    hostname: msa-board-redis-cluster-node-2
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-2:/data
+
+  msa-board-redis-cluster-node-3:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-3
+    hostname: msa-board-redis-cluster-node-3
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-3:/data
+
+  msa-board-redis-cluster-node-4:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-4
+    hostname: msa-board-redis-cluster-node-4
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-4:/data
+
+  msa-board-redis-cluster-node-5:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-5
+    hostname: msa-board-redis-cluster-node-5
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-5:/data
+
+  msa-board-redis-cluster-node-6:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-6
+    hostname: msa-board-redis-cluster-node-6
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+    volumes:
+      - ./data/msa-board-redis-cluster-node-6:/data
+
+  msa-board-redis-cluster-init:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-init
+    depends_on:
+      - msa-board-redis-cluster-node-1
+      - msa-board-redis-cluster-node-2
+      - msa-board-redis-cluster-node-3
+      - msa-board-redis-cluster-node-4
+      - msa-board-redis-cluster-node-5
+      - msa-board-redis-cluster-node-6
+    entrypoint: |
+      redis-cli --cluster --host msa-board-redis-cluster-node-1 --port 6379 cluster info | grep -q "cluster_state:ok" ||
+      redis-cli --cluster create --cluster-yes --cluster-replicas 1
+        msa-board-redis-cluster-node-1:6379
+        msa-board-redis-cluster-node-2:6379
+        msa-board-redis-cluster-node-3:6379
+        msa-board-redis-cluster-node-4:6379
+        msa-board-redis-cluster-node-5:6379
+        msa-board-redis-cluster-node-6:6379
+
+  redis-predixy:
+    image: haandol/predixy:latest
+    container_name: redis-predixy
+    hostname: redis-predixy
+    ports:
+      - 17617:7617
+    depends_on:
+      - msa-board-redis-cluster-init
+    volumes:
+      - ./predixy-conf/cluster.conf:/etc/predixy/conf/cluster.conf

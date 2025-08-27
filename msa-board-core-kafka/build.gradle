@@ -1,0 +1,10 @@
+dependencies {
+    api project(":msa-board-common")
+    api "org.springframework.boot:spring-boot-starter-json"
+    api "org.springframework.kafka:spring-kafka"
+    testImplementation "org.springframework.kafka:spring-kafka-test"
+}
+
+bootJar {
+    enabled = false
+}

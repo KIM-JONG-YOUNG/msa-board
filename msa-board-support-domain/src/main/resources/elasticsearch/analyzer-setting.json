@@ -1,0 +1,31 @@
+{
+  "number_of_shards": 1,
+  "number_of_replicas": 2,
+  "analysis": {
+    "tokenizer": {
+      "bigram_tokenizer": {
+        "type": "ngram",
+        "min_gram": 2,
+        "max_gram": 3,
+        "token_chars": [
+          "letter",
+          "digit"
+        ]
+      },
+      "nori_tokenizer": {
+        "type": "nori_tokenizer",
+        "decompound_mode": "mixed"
+      }
+    },
+    "analyzer": {
+      "bigram_analyzer": {
+        "type": "custom",
+        "tokenizer": "bigram_tokenizer"
+      },
+      "nori_analyzer": {
+        "type": "custom",
+        "tokenizer": "nori_tokenizer"
+      }
+    }
+  }
+}

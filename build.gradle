@@ -1,0 +1,87 @@
+plugins {
+    id "org.springframework.boot" version "3.5.4" apply false
+    id "io.spring.dependency-management" version "1.1.7" apply false
+}
+
+ext {
+    springCloudVersion = "2025.0.0"
+    springDocOpenAPIUIVersion = "2.8.8"
+    springBootRedissonVersion = "3.46.0"
+    embeddedRedisVersion = "0.7.2"
+    queryDslVersion = "5.1.0"
+    matstructVersion = "1.6.2"
+    jwtVersion = "0.12.6"
+}
+
+subprojects {
+
+    def hasSrcFolder = new File("${project.projectDir}/src").exists()
+    if (hasSrcFolder) {
+
+        apply plugin: "java-library"
+        apply plugin: "org.springframework.boot"
+        apply plugin: "io.spring.dependency-management"
+
+        group = "com.jong.msa.board"
+        version = "0.0.1-SNAPSHOT"
+
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
+
+        configurations {
+            compileOnly {
+                extendsFrom annotationProcessor
+            }
+        }
+
+        repositories {
+            mavenCentral()
+        }
+
+        dependencyManagement {
+            imports {
+                mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+            }
+            dependencies {
+                dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenAPIUIVersion}"
+                dependency "org.springdoc:springdoc-openapi-starter-webflux-ui:${springDocOpenAPIUIVersion}"
+
+                dependency "org.redisson:redisson-spring-boot-starter:${springBootRedissonVersion}"
+                dependency "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+
+                dependency "com.querydsl:querydsl-jpa:${queryDslVersion}"
+                dependency "com.querydsl:querydsl-apt:${queryDslVersion}"
+
+                dependency "org.mapstruct:mapstruct:${matstructVersion}"
+                dependency "org.mapstruct:mapstruct-processor:${matstructVersion}"
+
+                dependency "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+                dependency "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+                dependency "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
+            }
+        }
+
+        dependencies {
+            compileOnly "org.projectlombok:lombok"
+            annotationProcessor "org.projectlombok:lombok"
+            testCompileOnly "org.projectlombok:lombok"
+            testAnnotationProcessor "org.projectlombok:lombok"
+
+            implementation "org.springframework.boot:spring-boot-starter"
+            testImplementation "org.springframework.boot:spring-boot-starter-test"
+            testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+        }
+
+        bootRun {
+            jvmArgs "--add-opens=java.base/java.io=ALL-UNNAMED"
+        }
+
+        test {
+            jvmArgs "--add-opens=java.base/java.io=ALL-UNNAMED"
+            useJUnitPlatform()
+        }
+    }
+}

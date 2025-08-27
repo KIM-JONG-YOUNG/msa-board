@@ -1,0 +1,175 @@
+{
+  "properties": {
+    "id": {
+      "type": "keyword"
+    },
+    "content": {
+      "type": "text",
+      "fields": {
+        "bigram": {
+          "type": "text",
+          "analyzer": "bigram_analyzer"
+        },
+        "morph": {
+          "type": "text",
+          "analyzer": "nori_analyzer"
+        }
+      }
+    },
+    "writer": {
+      "type": "nested",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "username": {
+          "type": "keyword",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "name": {
+          "type": "keyword",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "gender": {
+          "type": "keyword"
+        },
+        "email": {
+          "type": "keyword",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "group": {
+          "type": "keyword"
+        },
+        "createdDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "updatedDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "state": {
+          "type": "keyword"
+        }
+      }
+    },
+    "post": {
+      "type": "nested",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "title": {
+          "type": "text",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "content": {
+          "type": "text",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "views": {
+          "type": "integer"
+        },
+        "createdDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "updatedDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "state": {
+          "type": "keyword"
+        }
+      }
+    },
+    "parent": {
+      "type": "nested",
+      "properties": {
+        "id": {
+          "type": "keyword"
+        },
+        "content": {
+          "type": "text",
+          "fields": {
+            "bigram": {
+              "type": "text",
+              "analyzer": "bigram_analyzer"
+            },
+            "morph": {
+              "type": "text",
+              "analyzer": "nori_analyzer"
+            }
+          }
+        },
+        "createdDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "updatedDateTime": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss"
+        },
+        "state": {
+          "type": "keyword"
+        }
+      }
+    },
+    "createdDateTime": {
+      "type": "date",
+      "format": "yyyy-MM-dd HH:mm:ss"
+    },
+    "updatedDateTime": {
+      "type": "date",
+      "format": "yyyy-MM-dd HH:mm:ss"
+    },
+    "state": {
+      "type": "keyword"
+    }
+  }
+}

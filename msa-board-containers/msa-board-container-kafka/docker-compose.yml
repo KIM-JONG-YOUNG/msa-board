@@ -1,0 +1,87 @@
+version: "3.8"
+
+services:
+
+  msa-board-kafka-cluster-node-1:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: msa-board-kafka-cluster-node-1
+    hostname: msa-board-kafka-cluster-node-1
+    environment:
+      # 시간 및 로케일 설정
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      # 기본 Kafka 설정
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_NUM_PARTITIONS=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      # 리스너 설정
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092,CONTROLLER://0.0.0.0:29092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://msa-board-kafka-cluster-node-1:9092,EXTERNAL://localhost:19091
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      # KRaft 설정 (단일 노드)
+      - CLUSTER_ID=kafka-multiple-cluster
+      - KAFKA_NODE_ID=1
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@msa-board-kafka-cluster-node-1:29092,2@msa-board-kafka-cluster-node-2:29092,3@msa-board-kafka-cluster-node-3:29092
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - 19091:19092
+    volumes:
+      - ./data/msa-board-kafka-cluster-node-1:/var/lib/kafka/data
+
+  msa-board-kafka-cluster-node-2:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: msa-board-kafka-cluster-node-2
+    hostname: msa-board-kafka-cluster-node-2
+    environment:
+      # 시간 및 로케일 설정
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      # 기본 Kafka 설정
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_NUM_PARTITIONS=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      # 리스너 설정
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092,CONTROLLER://0.0.0.0:29092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://msa-board-kafka-cluster-node-2:9092,EXTERNAL://localhost:19092
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      # KRaft 설정 (단일 노드)
+      - CLUSTER_ID=kafka-multiple-cluster
+      - KAFKA_NODE_ID=2
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@msa-board-kafka-cluster-node-1:29092,2@msa-board-kafka-cluster-node-2:29092,3@msa-board-kafka-cluster-node-3:29092
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - 19092:19092
+    volumes:
+      - ./data/msa-board-kafka-cluster-node-2:/var/lib/kafka/data
+
+  msa-board-kafka-cluster-node-3:
+    image: confluentinc/cp-kafka:7.5.0
+    container_name: msa-board-kafka-cluster-node-3
+    hostname: msa-board-kafka-cluster-node-3
+    environment:
+      # 시간 및 로케일 설정
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      # 기본 Kafka 설정
+      - KAFKA_AUTO_CREATE_TOPICS_ENABLE=true
+      - KAFKA_NUM_PARTITIONS=1
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=3
+      # 리스너 설정
+      - KAFKA_LISTENER_SECURITY_PROTOCOL_MAP=INTERNAL:PLAINTEXT,EXTERNAL:PLAINTEXT,CONTROLLER:PLAINTEXT
+      - KAFKA_LISTENERS=INTERNAL://0.0.0.0:9092,EXTERNAL://0.0.0.0:19092,CONTROLLER://0.0.0.0:29092
+      - KAFKA_ADVERTISED_LISTENERS=INTERNAL://msa-board-kafka-cluster-node-3:9092,EXTERNAL://localhost:19093
+      - KAFKA_INTER_BROKER_LISTENER_NAME=INTERNAL
+      # KRaft 설정 (단일 노드)
+      - CLUSTER_ID=kafka-multiple-cluster
+      - KAFKA_NODE_ID=2
+      - KAFKA_PROCESS_ROLES=broker,controller
+      - KAFKA_CONTROLLER_QUORUM_VOTERS=1@msa-board-kafka-cluster-node-1:29092,2@msa-board-kafka-cluster-node-2:29092,3@msa-board-kafka-cluster-node-3:29092
+      - KAFKA_CONTROLLER_LISTENER_NAMES=CONTROLLER
+    ports:
+      - 19093:19092
+    volumes:
+      - ./data/msa-board-kafka-cluster-node-3:/var/lib/kafka/data

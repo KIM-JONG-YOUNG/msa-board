@@ -1,0 +1,13 @@
+dependencies {
+    api project(":msa-board-common")
+    api "org.springframework.boot:spring-boot-starter-aop"
+    api "org.springframework.boot:spring-boot-starter-data-redis-reactive"
+    api "org.springframework.boot:spring-boot-starter-data-redis"
+    api "org.redisson:redisson-spring-boot-starter"
+    testImplementation "io.projectreactor:reactor-test"
+    testImplementation "it.ozimov:embedded-redis"
+}
+
+bootJar {
+    enabled = false
+}
