@@ -1,0 +1,12 @@
+{
+  "name": "msa-board-views",
+  "version": "1.0.0",
+  "author": "kim-jong-young",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "msa-board-view-common",
+    "msa-board-view-admin",
+    "msa-board-view-user"
+  ]
+}
