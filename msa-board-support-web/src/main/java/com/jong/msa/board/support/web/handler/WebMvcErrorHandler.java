@@ -14,16 +14,17 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @Slf4j
-@Component
+@RestControllerAdvice
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
@@ -36,6 +37,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
     ) {
         HttpServletRequest httpServletRequest = ((ServletWebRequest) request).getRequest();
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse.builder()
                 .path(httpServletRequest.getRequestURI())
                 .code(ErrorCode.INVALID_PARAMETER.name())
@@ -52,6 +54,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
         ConstraintViolationException ex, HttpServletRequest request
     ) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse.builder()
                 .path(request.getRequestURI())
                 .code(ErrorCode.INVALID_PARAMETER.name())
@@ -68,6 +71,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
         RestServiceException ex, HttpServletRequest request
     ) {
         return ResponseEntity.status(ex.getStatus())
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse.builder()
                 .path(request.getRequestURI())
                 .code(ex.getErrorCode().name())
@@ -82,6 +86,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
     ) {
         log.error(ex.getMessage(), ex);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse.builder()
                 .path(request.getRequestURI())
                 .code(ErrorCode.UNEXPECTED_ERROR.name())
@@ -101,6 +106,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
             ? ErrorCode.UNSUPPORTED_REQUEST
             : ErrorCode.UNEXPECTED_ERROR;
         return ResponseEntity.status(statusCode)
+            .contentType(MediaType.APPLICATION_JSON)
             .body(ErrorResponse.builder()
                 .path(httpServletRequest.getRequestURI())
                 .code(errorCode.name())
