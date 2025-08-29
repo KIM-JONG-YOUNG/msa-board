@@ -6,6 +6,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-1
     hostname: msa-board-redis-cluster-node-1
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.10
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -22,6 +25,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-2
     hostname: msa-board-redis-cluster-node-2
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.20
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -38,6 +44,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-3
     hostname: msa-board-redis-cluster-node-3
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.30
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -54,6 +63,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-4
     hostname: msa-board-redis-cluster-node-4
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.40
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -70,6 +82,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-5
     hostname: msa-board-redis-cluster-node-5
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.50
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -86,6 +101,9 @@ services:
     image: redis:7.2
     container_name: msa-board-redis-cluster-node-6
     hostname: msa-board-redis-cluster-node-6
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.60
     environment:
       - TZ=Asia/Seoul
       - LC_ALL=C.UTF-8
@@ -109,14 +127,14 @@ services:
       - msa-board-redis-cluster-node-5
       - msa-board-redis-cluster-node-6
     entrypoint: |
-      redis-cli --cluster --host msa-board-redis-cluster-node-1 --port 6379 cluster info | grep -q "cluster_state:ok" ||
+      redis-cli --cluster --host 192.168.10.10 --port 6379 cluster info | grep -q "cluster_state:ok" ||
       redis-cli --cluster create --cluster-yes --cluster-replicas 1
-        msa-board-redis-cluster-node-1:6379
-        msa-board-redis-cluster-node-2:6379
-        msa-board-redis-cluster-node-3:6379
-        msa-board-redis-cluster-node-4:6379
-        msa-board-redis-cluster-node-5:6379
-        msa-board-redis-cluster-node-6:6379
+        192.168.10.10:6379
+        192.168.10.20:6379
+        192.168.10.30:6379
+        192.168.10.40:6379
+        192.168.10.50:6379
+        192.168.10.60:6379
 
   redis-predixy:
     image: haandol/predixy:latest
@@ -126,5 +144,16 @@ services:
       - 17617:7617
     depends_on:
       - msa-board-redis-cluster-init
+    networks:
+      redis-cluster-net:
+        ipv4_address: 192.168.10.100
     volumes:
       - ./predixy-conf/cluster.conf:/etc/predixy/conf/cluster.conf
+
+networks:
+  redis-cluster-net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.10.0/24
