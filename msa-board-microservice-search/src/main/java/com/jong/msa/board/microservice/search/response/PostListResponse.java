@@ -31,7 +31,7 @@ public record PostListResponse(
         @Schema(description = "제목")
         String title,
 
-        @Schema(description = "작성자 ID")
+        @Schema(description = "조회수")
         int views,
 
         @Schema(description = "작성자")
