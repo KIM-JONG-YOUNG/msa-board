@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import lombok.Builder;
+import lombok.With;
 
 @Builder
 @Schema(description = "회원 목록 응답")
@@ -21,6 +22,7 @@ public record PostListResponse(
 
 ) implements SearchResponse<PostListResponse.Item> {
 
+    @With
     @Builder
     @Schema(name = "PostListResponse.Item", description = "게시글 목록 항목")
     public record Item(
@@ -33,6 +35,9 @@ public record PostListResponse(
 
         @Schema(description = "조회수")
         int views,
+
+        @Schema(description = "댓글수")
+        int commentCount,
 
         @Schema(description = "작성자")
         Writer writer,

@@ -4,10 +4,13 @@ import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.FieldValue;
 import co.elastic.clients.elasticsearch._types.SortOptions;
 import co.elastic.clients.elasticsearch._types.SortOrder;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregate;
+import co.elastic.clients.elasticsearch._types.aggregations.Aggregation;
 import co.elastic.clients.elasticsearch._types.query_dsl.BoolQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.DateRangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.RangeQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.TermQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.TermsQuery;
 import co.elastic.clients.elasticsearch.core.CountRequest;
 import co.elastic.clients.elasticsearch.core.CountResponse;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
@@ -31,7 +34,10 @@ import com.jong.msa.board.support.domain.document.PostDocument;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -266,11 +272,39 @@ public class SearchCoreService {
         SearchRequest searchRequest = buildSearchRequest(searchRequestSupplier, request.offset(), request.limit());
         SearchResponse<PostDocument> searchResponse = elasticsearchClient.search(searchRequest, PostDocument.class);
 
+        List<UUID> ids = searchResponse.hits().hits().stream()
+            .map(Hit::source)
+            .map(PostDocument::getId)
+            .toList();
+
+        TermsQuery postIdFilter = new TermsQuery.Builder()
+            .field("post.id")
+            .terms(builder -> builder.value(ids.stream()
+                .map(FieldValue::of)
+                .toList()))
+            .build();
+
+        SearchRequest aggregationRequest = new SearchRequest.Builder()
+            .index("comments")
+            .query(BoolQuery.of(builder -> builder.filter(postIdFilter)))
+            .aggregations("postIdCounts", Aggregation
+                .of(builder -> builder.terms(term -> term.field("post.id"))))
+            .build();
+
+        SearchResponse<CommentDocument> aggregationResponse = elasticsearchClient.search(aggregationRequest, CommentDocument.class);
+
+        Aggregate postIdCountsAggregation = aggregationResponse.aggregations().get("postIdCounts");
+        Map<String, Long> postIdCounts = postIdCountsAggregation.sterms().buckets().array().stream()
+            .collect(Collectors.toMap(
+                stringTermsBucket -> stringTermsBucket.key().stringValue(),
+                stringTermsBucket -> stringTermsBucket.docCount()
+            ));
         return PostListResponse.builder()
             .totalCount(countResponse.count())
             .list(searchResponse.hits().hits().stream()
                 .map(Hit::source)
                 .map(postDocumentMapper::toListItem)
+                .map(item -> item.withCommentCount(Math.toIntExact(postIdCounts.get(item.id()))))
                 .toList())
             .build();
     }
