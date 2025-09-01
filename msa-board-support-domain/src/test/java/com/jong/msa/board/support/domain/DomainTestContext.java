@@ -36,6 +36,7 @@ public class DomainTestContext {
                 .override(OS.MAC_OS_X, Architecture.x86_64, "redis/redis-server")
                 .override(OS.MAC_OS_X, Architecture.x86, "redis/redis-server"))
             .port(EMBEDDED_REDIS_SERVER_PORT)
+            .setting("maxmemory 128mb") // 메모리 최대 사용량 설정
             .build();
 
         ELASTICSEARCH_CONTAINER_PORT = PortUtils.getAvailablePort();
@@ -49,10 +50,10 @@ public class DomainTestContext {
             .setPortBindings(List.of(ELASTICSEARCH_CONTAINER_PORT + ":9200"));
 
         String elasticsearchURL = "localhost:" + ELASTICSEARCH_CONTAINER_PORT;
-        System.setProperty("spring.elasticsearch.rest.uris", elasticsearchURL);
-        System.setProperty("spring.redis.host", "localhost");
-        System.setProperty("spring.redis.port", String.valueOf(EMBEDDED_REDIS_SERVER_PORT));
-        System.setProperty("spring.redis.reactive", "false");
+        System.setProperty("spring.elasticsearch.uris", elasticsearchURL);
+        System.setProperty("spring.data.redis.host", "localhost");
+        System.setProperty("spring.data.redis.port", String.valueOf(EMBEDDED_REDIS_SERVER_PORT));
+        System.setProperty("spring.data.redis.reactive", "false");
     }
 
     @PostConstruct

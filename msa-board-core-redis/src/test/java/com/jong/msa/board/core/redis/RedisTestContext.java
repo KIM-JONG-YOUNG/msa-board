@@ -38,8 +38,8 @@ public class RedisTestContext {
             .port(EMBEDDED_REDIS_SERVER_PORT)
             .build();
 
-        System.setProperty("spring.redis.host", "localhost");
-        System.setProperty("spring.redis.port", String.valueOf(EMBEDDED_REDIS_SERVER_PORT));
+        System.setProperty("spring.data.redis.host", "localhost");
+        System.setProperty("spring.data.redis.port", String.valueOf(EMBEDDED_REDIS_SERVER_PORT));
     }
 
     public static void assertBeanExists(ApplicationContext applicationContext, Class<?> clazz) {
