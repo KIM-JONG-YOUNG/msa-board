@@ -14,6 +14,10 @@ spring:
         - classpath:jpa/schema-member.sql
         - classpath:jpa/schema-post.sql
         - classpath:jpa/schema-comment.sql
+      data-locations:
+        - classpath:jpa/data-member.sql
+        - classpath:jpa/data-post.sql
+        - classpath:jpa/data-comment.sql
 
   jpa:
     database-platform: org.hibernate.dialect.MariaDBDialect
