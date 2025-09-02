@@ -136,10 +136,10 @@ services:
         192.168.10.50:6379
         192.168.10.60:6379
 
-  redis-predixy:
+  msa-board-redis-cluster-predixy:
     image: haandol/predixy:latest
-    container_name: redis-predixy
-    hostname: redis-predixy
+    container_name: msa-board-redis-cluster-predixy
+    hostname: msa-board-redis-cluster-predixy
     ports:
       - 17617:7617
     depends_on:
