@@ -30,7 +30,7 @@ public class DomainDataTests {
         return "X'" + String.format("%016x%016x", msb, lsb) + "'";
     }
 
-    public static void writeToFile(String filePath, String content) throws Exception {
+    private static void createSqlFile(String filePath, String content) throws Exception {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filePath)))) {
             writer.write(content);
         }
@@ -41,7 +41,7 @@ public class DomainDataTests {
 
         memberRecords = IntStream.range(0, 10)
             .mapToObj(i -> MemberRecord.builder()
-                .id(uuidToHex(UUID.randomUUID()))
+                .id(UUID.randomUUID())
                 .username("username-" + i)
                 .password("password-" + i)
                 .name("name-" + i)
@@ -57,7 +57,7 @@ public class DomainDataTests {
         postRecords = memberRecords.stream()
             .flatMap(member -> IntStream.range(0, 10)
                 .mapToObj(i -> PostRecord.builder()
-                    .id(uuidToHex(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .title(String.format("Post Title %d by %s", i, member.username()))
                     .content(String.format("Post Content %d by %s", i, member.username()))
                     .writerId(member.id())
@@ -74,7 +74,7 @@ public class DomainDataTests {
                 .mapToObj(i -> {
                     MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                     return CommentRecord.builder()
-                        .id(uuidToHex(UUID.randomUUID()))
+                        .id(UUID.randomUUID())
                         .content(String.format("Comment Content %d by %s", i, member.username()))
                         .writerId(member.id())
                         .postId(post.id())
@@ -90,7 +90,7 @@ public class DomainDataTests {
             .map(comment -> {
                 MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                 return CommentRecord.builder()
-                    .id(uuidToHex(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .content(String.format("Child Comment Content by %s", member.username()))
                     .writerId(member.id())
                     .postId(comment.postId())
@@ -106,7 +106,7 @@ public class DomainDataTests {
             .map(comment -> {
                 MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                 return CommentRecord.builder()
-                    .id(uuidToHex(UUID.randomUUID()))
+                    .id(UUID.randomUUID())
                     .content(String.format("Child Comment Content by %s", member.username()))
                     .writerId(member.id())
                     .postId(comment.postId())
@@ -120,9 +120,9 @@ public class DomainDataTests {
 
         String memberDataQueryPrefix = """
             INSERT INTO `tb_member` 
-                (`id`, 
-                `member_username`, 
-                `member_password`, 
+                (`id`,
+                `member_username`,
+                `member_password`,
                 `member_name`,
                 `member_gender`,
                 `member_email`,
@@ -176,14 +176,14 @@ public class DomainDataTests {
                 .collect(Collectors.joining(",\n", commentDataQueryPrefix, ";")));
         }
 
-        writeToFile("src/main/resources/jpa/data-member.sql", memberDataQuery);
-        writeToFile("src/main/resources/jpa/data-post.sql", postDataQuery);
-        writeToFile("src/main/resources/jpa/data-comment.sql", commentDataQueries.toString());
+        createSqlFile("src/main/resources/jpa/data-member.sql", memberDataQuery);
+        createSqlFile("src/main/resources/jpa/data-post.sql", postDataQuery);
+        createSqlFile("src/main/resources/jpa/data-comment.sql", commentDataQueries.toString());
     }
 
     @Builder
     public record MemberRecord(
-        String id,
+        UUID id,
         String username,
         String password,
         String name,
@@ -196,23 +196,24 @@ public class DomainDataTests {
     ) {
 
         public String toInsertQuery() {
+            String idString = uuidToHex(id);
             String genderString = gender == Gender.MALE ? "M" : "F";
             int groupCode = group == Group.ADMIN ? 1 : 2;
             int stateCode = state == State.ACTIVE ? 1 : 0;
             String createdDateTimeString = createdDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             return String.format("(%s, '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', %d)",
-                id, username, password, name, genderString, email, groupCode,
+                idString, username, password, name, genderString, email, groupCode,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
 
     @Builder
     public record PostRecord(
-        String id,
+        UUID id,
         String title,
         String content,
-        String writerId,
+        UUID writerId,
         int views,
         LocalDateTime createdDateTime,
         LocalDateTime updatedDateTime,
@@ -220,38 +221,39 @@ public class DomainDataTests {
     ) {
 
         public String toInsertQuery() {
+            String idString = uuidToHex(id);
+            String writerIdString = uuidToHex(writerId);
             int stateCode = state == State.ACTIVE ? 1 : 0;
             String createdDateTimeString = createdDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             return String.format("(%s, '%s', '%s', %s, %d, '%s', '%s', %d)",
-                id, title, content, writerId, views,
+                idString, title, content, writerIdString, views,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
 
     @Builder
     public record CommentRecord(
-        String id,
+        UUID id,
         String content,
-        String writerId,
-        String postId,
-        String parentId,
+        UUID writerId,
+        UUID postId,
+        UUID parentId,
         LocalDateTime createdDateTime,
         LocalDateTime updatedDateTime,
         State state
     ) {
 
         public String toInsertQuery() {
+            String idString = uuidToHex(id);
+            String writerIdString = uuidToHex(writerId);
+            String postIdString = uuidToHex(postId);
+            String parentIdString = parentId == null ? "NULL" : uuidToHex(parentId);
             int stateCode = state == State.ACTIVE ? 1 : 0;
             String createdDateTimeString = createdDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
-            if (parentId == null) {
-                return String.format("(%s, '%s', %s, %s, NULL, '%s', '%s', %d)",
-                    id, content, writerId, postId,
-                    createdDateTimeString, updatedDateTimeString, stateCode);
-            }
             return String.format("(%s, '%s', %s, %s, %s, '%s', '%s', %d)",
-                id, content, writerId, postId, parentId,
+                idString, content, writerIdString, postIdString, parentIdString,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
