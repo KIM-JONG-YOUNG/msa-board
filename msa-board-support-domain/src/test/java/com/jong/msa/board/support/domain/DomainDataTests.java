@@ -4,6 +4,9 @@ import com.jong.msa.board.common.constants.DateTimeFormats;
 import com.jong.msa.board.common.enums.Gender;
 import com.jong.msa.board.common.enums.Group;
 import com.jong.msa.board.common.enums.State;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +25,23 @@ public class DomainDataTests {
     private List<CommentRecord> commentRecords;
 
     public static String uuidToHex(UUID uuid) {
-        // Most Significant Bits (MSB)와 Least Significant Bits (LSB) 추출
         long msb = uuid.getMostSignificantBits();
         long lsb = uuid.getLeastSignificantBits();
-        // MSB와 LSB를 16진수 문자열로 변환하고 결합
-//        return String.format("%016x%016x", msb, lsb);
-        String hexString = String.format("%016x%016x", msb, lsb);
-        // BINARY(16) 형식으로 반환
-        return "X'" + hexString + "'";
+        return "X'" + String.format("%016x%016x", msb, lsb) + "'";
+    }
+
+    public static void writeToFile(String filePath, String content) throws Exception {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(new File(filePath)))) {
+            writer.write(content);
+        }
     }
 
     @Test
-    void createDataSql() {
+    void createDataSql() throws Exception {
 
         memberRecords = IntStream.range(0, 10)
             .mapToObj(i -> MemberRecord.builder()
-                .id(UUID.randomUUID())
+                .id(uuidToHex(UUID.randomUUID()))
                 .username("username-" + i)
                 .password("password-" + i)
                 .name("name-" + i)
@@ -53,7 +57,7 @@ public class DomainDataTests {
         postRecords = memberRecords.stream()
             .flatMap(member -> IntStream.range(0, 10)
                 .mapToObj(i -> PostRecord.builder()
-                    .id(UUID.randomUUID())
+                    .id(uuidToHex(UUID.randomUUID()))
                     .title(String.format("Post Title %d by %s", i, member.username()))
                     .content(String.format("Post Content %d by %s", i, member.username()))
                     .writerId(member.id())
@@ -70,7 +74,7 @@ public class DomainDataTests {
                 .mapToObj(i -> {
                     MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                     return CommentRecord.builder()
-                        .id(UUID.randomUUID())
+                        .id(uuidToHex(UUID.randomUUID()))
                         .content(String.format("Comment Content %d by %s", i, member.username()))
                         .writerId(member.id())
                         .postId(post.id())
@@ -86,7 +90,7 @@ public class DomainDataTests {
             .map(comment -> {
                 MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                 return CommentRecord.builder()
-                    .id(UUID.randomUUID())
+                    .id(uuidToHex(UUID.randomUUID()))
                     .content(String.format("Child Comment Content by %s", member.username()))
                     .writerId(member.id())
                     .postId(comment.postId())
@@ -102,7 +106,7 @@ public class DomainDataTests {
             .map(comment -> {
                 MemberRecord member = memberRecords.get(random.nextInt(memberRecords.size() - 1));
                 return CommentRecord.builder()
-                    .id(UUID.randomUUID())
+                    .id(uuidToHex(UUID.randomUUID()))
                     .content(String.format("Child Comment Content by %s", member.username()))
                     .writerId(member.id())
                     .postId(comment.postId())
@@ -116,9 +120,9 @@ public class DomainDataTests {
 
         String memberDataQueryPrefix = """
             INSERT INTO `tb_member` 
-                (`id`,
-                `member_username`,
-                `member_password`,
+                (`id`, 
+                `member_username`, 
+                `member_password`, 
                 `member_name`,
                 `member_gender`,
                 `member_email`,
@@ -161,18 +165,25 @@ public class DomainDataTests {
             .map(PostRecord::toInsertQuery)
             .collect(Collectors.joining(",\n", postDataQueryPrefix, ";"));
 
-        String commentDataQuery = commentRecords.stream()
-            .map(CommentRecord::toInsertQuery)
-            .collect(Collectors.joining(",\n", commentDataQueryPrefix, ";"));
+        StringBuilder commentDataQueries = new StringBuilder();
+        int loopCount = (int) Math.ceil((double) commentRecords.size() / 100);
+        for (int i = 0; i < loopCount; i++) {
+            int startIndex = i * 100;
+            int endIndex = Math.min((i + 1) * 100, commentRecords.size());
+            commentDataQueries.append(commentRecords
+                .subList(startIndex, endIndex).stream()
+                .map(CommentRecord::toInsertQuery)
+                .collect(Collectors.joining(",\n", commentDataQueryPrefix, ";")));
+        }
 
-        System.out.println(memberDataQuery);
-        System.out.println(postDataQuery);
-        System.out.println(commentDataQuery);
+        writeToFile("src/main/resources/jpa/data-member.sql", memberDataQuery);
+        writeToFile("src/main/resources/jpa/data-post.sql", postDataQuery);
+        writeToFile("src/main/resources/jpa/data-comment.sql", commentDataQueries.toString());
     }
 
     @Builder
     public record MemberRecord(
-        UUID id,
+        String id,
         String username,
         String password,
         String name,
@@ -191,17 +202,17 @@ public class DomainDataTests {
             String createdDateTimeString = createdDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             return String.format("(%s, '%s', '%s', '%s', '%s', '%s', %d, '%s', '%s', %d)",
-                uuidToHex(id), username, password, name, genderString, email, groupCode,
+                id, username, password, name, genderString, email, groupCode,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
 
     @Builder
     public record PostRecord(
-        UUID id,
+        String id,
         String title,
         String content,
-        UUID writerId,
+        String writerId,
         int views,
         LocalDateTime createdDateTime,
         LocalDateTime updatedDateTime,
@@ -213,18 +224,18 @@ public class DomainDataTests {
             String createdDateTimeString = createdDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             return String.format("(%s, '%s', '%s', %s, %d, '%s', '%s', %d)",
-                uuidToHex(id), title, content, uuidToHex(writerId), views,
+                id, title, content, writerId, views,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
 
     @Builder
     public record CommentRecord(
-        UUID id,
+        String id,
         String content,
-        UUID writerId,
-        UUID postId,
-        UUID parentId,
+        String writerId,
+        String postId,
+        String parentId,
         LocalDateTime createdDateTime,
         LocalDateTime updatedDateTime,
         State state
@@ -236,11 +247,11 @@ public class DomainDataTests {
             String updatedDateTimeString = updatedDateTime.format(DateTimeFormats.DATE_TIME_FORMATTER);
             if (parentId == null) {
                 return String.format("(%s, '%s', %s, %s, NULL, '%s', '%s', %d)",
-                    uuidToHex(id), content, uuidToHex(writerId), uuidToHex(postId),
+                    id, content, writerId, postId,
                     createdDateTimeString, updatedDateTimeString, stateCode);
             }
             return String.format("(%s, '%s', %s, %s, %s, '%s', '%s', %d)",
-                uuidToHex(id), content, uuidToHex(writerId), uuidToHex(postId), uuidToHex(parentId),
+                id, content, writerId, postId, parentId,
                 createdDateTimeString, updatedDateTimeString, stateCode);
         }
     }
