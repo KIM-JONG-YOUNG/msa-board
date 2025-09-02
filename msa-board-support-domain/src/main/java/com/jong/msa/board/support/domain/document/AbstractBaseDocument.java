@@ -1,5 +1,6 @@
 package com.jong.msa.board.support.domain.document;
 
+import com.jong.msa.board.common.constants.DateTimeFormats;
 import com.jong.msa.board.common.enums.State;
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -24,10 +25,10 @@ public abstract class AbstractBaseDocument<T extends AbstractBaseDocument<T>> {
     @Id
     private UUID id;
 
-    @Field(name = "createdDateTime", type = FieldType.Date)
+    @Field(name = "createdDateTime", type = FieldType.Date, format = {}, pattern = DateTimeFormats.DATE_TIME_FORMAT)
     private LocalDateTime createdDateTime;
 
-    @Field(name = "updatedDateTime", type = FieldType.Date)
+    @Field(name = "updatedDateTime", type = FieldType.Date, format = {}, pattern = DateTimeFormats.DATE_TIME_FORMAT)
     private LocalDateTime updatedDateTime;
 
     @Builder.Default

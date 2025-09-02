@@ -6,11 +6,7 @@ import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jong.msa.board.common.constants.PackageNames;
-import com.jong.msa.board.common.converter.LocalDateConverter;
-import com.jong.msa.board.common.converter.LocalDateTimeConverter;
-import com.jong.msa.board.common.converter.LocalTimeConverter;
 import com.jong.msa.board.support.domain.repository.AbstractDocumentRepository;
-import java.util.List;
 import org.apache.http.HttpHost;
 import org.elasticsearch.client.RestClient;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -20,7 +16,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
-import org.springframework.data.elasticsearch.core.convert.ElasticsearchCustomConversions;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
@@ -50,18 +45,6 @@ public class ElasticsearchConfig {
     @Bean
     ElasticsearchClient elasticsearchClient(ElasticsearchTransport transport) {
         return new ElasticsearchClient(transport);
-    }
-
-    @Bean
-    ElasticsearchCustomConversions elasticsearchCustomConversions() {
-        return new ElasticsearchCustomConversions(List.of(
-            LocalTimeConverter.StringToLocalTime.INSTANCE,
-            LocalTimeConverter.LocalTimeToString.INSTANCE,
-            LocalDateConverter.StringToLocalDate.INSTANCE,
-            LocalDateConverter.LocalDateToString.INSTANCE,
-            LocalDateTimeConverter.StringToLocalDateTime.INSTANCE,
-            LocalDateTimeConverter.LocalDateTimeToString.INSTANCE
-        ));
     }
 
 }
