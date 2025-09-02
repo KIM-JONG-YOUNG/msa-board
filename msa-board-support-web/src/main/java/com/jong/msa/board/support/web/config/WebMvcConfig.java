@@ -1,8 +1,6 @@
 package com.jong.msa.board.support.web.config;
 
-import com.jong.msa.board.common.converter.LocalDateConverter;
-import com.jong.msa.board.common.converter.LocalDateTimeConverter;
-import com.jong.msa.board.common.converter.LocalTimeConverter;
+import com.jong.msa.board.support.web.converter.JavaTimeParamConverter;
 import com.jong.msa.board.support.web.filter.WebMvcLoggingFilter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -19,9 +17,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
     @Override
     public void addFormatters(FormatterRegistry registry) {
-        registry.addConverter(LocalTimeConverter.StringToLocalTime.INSTANCE);
-        registry.addConverter(LocalDateConverter.StringToLocalDate.INSTANCE);
-        registry.addConverter(LocalDateTimeConverter.StringToLocalDateTime.INSTANCE);
+        registry.addConverter(JavaTimeParamConverter.StringToLocalTime.INSTANCE);
+        registry.addConverter(JavaTimeParamConverter.StringToLocalDate.INSTANCE);
+        registry.addConverter(JavaTimeParamConverter.StringToLocalDateTime.INSTANCE);
     }
 
     @Override
