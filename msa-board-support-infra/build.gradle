@@ -1,5 +1,6 @@
 dependencies {
     implementation project(":msa-board-common")
+    implementation "org.springframework.boot:spring-boot-starter-json"
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 }
 
