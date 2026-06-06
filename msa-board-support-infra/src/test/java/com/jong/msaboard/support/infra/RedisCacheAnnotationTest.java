@@ -9,7 +9,7 @@ import com.jong.msaboard.support.infra.cache.RedisCacheable;
 import com.jong.msaboard.support.infra.cache.RedisEvict;
 import com.jong.msaboard.support.infra.config.RedisConfig;
 import com.jong.msaboard.support.infra.factory.EmbeddedRedisServerFactory;
-import com.jong.msaboard.support.infra.service.RedisCacheTestService;
+import com.jong.msaboard.support.infra.service.RedisCacheAnnotationTestService;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
@@ -35,7 +35,7 @@ import redis.embedded.RedisServer;
     RedisCacheable.Advisor.class,
     RedisEvict.Advisor.class,
     RedisCacheAnnotationTest.Config.class,
-    RedisCacheTestService.class,
+    RedisCacheAnnotationTestService.class,
 })
 @TestPropertySource(properties = {
     "spring.data.redis.repositories.enabled=false"
@@ -45,7 +45,7 @@ public class RedisCacheAnnotationTest {
     static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
 
     @MockitoSpyBean
-    RedisCacheTestService redisCacheTestService;
+    RedisCacheAnnotationTestService redisCacheAnnotationTestService;
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
@@ -65,17 +65,17 @@ public class RedisCacheAnnotationTest {
     @Test
     void 캐시_저장_어노테이션_테스트() {
 
-        redisCacheTestService.saveToRedis(new RedisCacheTestService.Data("value-1", "value-2", "value-3"));
-        redisCacheTestService.saveToRedis(new RedisCacheTestService.Data("value-1", "value-2", "value-3"));
+        redisCacheAnnotationTestService.saveToRedis(new RedisCacheAnnotationTestService.Data("value-1", "value-2", "value-3"));
+        redisCacheAnnotationTestService.saveToRedis(new RedisCacheAnnotationTestService.Data("value-1", "value-2", "value-3"));
 
-        verify(redisCacheTestService, times(1)).saveToRedis(any());
+        verify(redisCacheAnnotationTestService, times(1)).saveToRedis(any());
     }
 
     @Test
     void 캐시_삭제_어노테이션_테스트() {
 
         redisTemplate.opsForValue().set("test::value-1", "value-1", Duration.ofSeconds(10));
-        redisCacheTestService.evictFromRedis(new RedisCacheTestService.Data("value-1", "value-2", "value-3"));
+        redisCacheAnnotationTestService.evictFromRedis(new RedisCacheAnnotationTestService.Data("value-1", "value-2", "value-3"));
 
         assertFalse(redisTemplate.hasKey("test::value-1"));
     }

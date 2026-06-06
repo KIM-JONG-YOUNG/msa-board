@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class RedisCacheTestService {
+public class RedisCacheAnnotationTestService {
 
     @RedisCacheable(name = "test::", key = "#data.property1")
     public Data saveToRedis(Data data) {
