@@ -1,0 +1,17 @@
+dependencies {
+    implementation project(":msa-board-common")
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = false
+}
+
+test {
+    useJUnitPlatform()
+}
+
