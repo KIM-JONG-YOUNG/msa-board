@@ -20,8 +20,13 @@ dependencies {
 
     compileOnly "org.springframework.kafka:spring-kafka"
 
+    compileOnly "org.springframework.boot:spring-boot-starter-data-elasticsearch"
+
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.springframework.kafka:spring-kafka-test"
+    testImplementation "org.testcontainers:junit-jupiter"
+    testImplementation "org.testcontainers:elasticsearch"
     testImplementation "it.ozimov:embedded-redis"
     testRuntimeOnly "com.h2database:h2"
 }
