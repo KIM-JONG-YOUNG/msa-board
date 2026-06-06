@@ -3,6 +3,10 @@ plugins {
     id "io.spring.dependency-management" version "1.1.7" apply false
 }
 
+ext {
+    embeddedRedisVersion = "0.7.2"
+}
+
 subprojects {
 
     def hasSrcFolder = new File("${projectDir}/src").exists()
@@ -24,6 +28,12 @@ subprojects {
 
         repositories {
             mavenCentral()
+        }
+
+        dependencyManagement {
+            dependencies {
+                dependency "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+            }
         }
 
         dependencies {

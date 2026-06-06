@@ -1,7 +1,20 @@
+configurations {
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
 dependencies {
+
     implementation project(":msa-board-common")
+    implementation "org.springframework.boot:spring-boot-starter-aop"
     implementation "org.springframework.boot:spring-boot-starter-json"
+
+    compileOnly "org.springframework.boot:spring-boot-starter-data-redis"
+    compileOnly "org.springframework.boot:spring-boot-starter-data-redis-reactive"
+
     testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "it.ozimov:embedded-redis"
 }
 
 bootJar {
