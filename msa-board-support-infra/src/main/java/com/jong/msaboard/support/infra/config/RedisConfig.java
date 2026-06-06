@@ -2,6 +2,9 @@ package com.jong.msaboard.support.infra.config;
 
 import com.jong.msaboard.support.infra.condition.ConditionalOnRedis;
 import com.jong.msaboard.support.infra.condition.ConditionalOnRedisReactive;
+import com.jong.msaboard.support.infra.condition.ConditionalOnRedisson;
+import org.redisson.Redisson;
+import org.redisson.api.RedissonClient;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -57,6 +60,16 @@ public class RedisConfig {
             .hashKey(StringRedisSerializer.UTF_8)
             .hashValue(StringRedisSerializer.UTF_8)
             .build());
+    }
+
+    @Bean
+    @Primary
+    @ConditionalOnRedisson
+    RedissonClient reactiveClient(RedisProperties properties) {
+        var address = "redis://%s:%d".formatted(properties.getHost(), properties.getPort());
+        var config = new org.redisson.config.Config();
+        config.useSingleServer().setAddress(address);
+        return Redisson.create(config);
     }
 
 }
