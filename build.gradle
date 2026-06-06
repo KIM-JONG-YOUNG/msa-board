@@ -5,6 +5,7 @@ plugins {
 
 ext {
     embeddedRedisVersion = "0.7.2"
+    springBootRedissonVersion = "3.52.0"
 }
 
 subprojects {
@@ -33,6 +34,7 @@ subprojects {
         dependencyManagement {
             dependencies {
                 dependency "it.ozimov:embedded-redis:${embeddedRedisVersion}"
+                dependency "org.redisson:redisson-spring-boot-starter:${springBootRedissonVersion}"
             }
         }
 
