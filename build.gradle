@@ -1,0 +1,36 @@
+plugins {
+    id "org.springframework.boot" version "3.5.14" apply false
+    id "io.spring.dependency-management" version "1.1.7" apply false
+}
+
+subprojects {
+
+    def hasSrcFolder = new File("${projectDir}/src").exists()
+    if (hasSrcFolder) {
+
+        apply plugin: "java-library"
+        apply plugin: "org.springframework.boot"
+        apply plugin: "io.spring.dependency-management"
+
+        group = "com.jong"
+        version = "0.0.1-SNAPSHOT"
+        description = "msa-board"
+
+        java {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(21)
+            }
+        }
+
+        repositories {
+            mavenCentral()
+        }
+
+        dependencies {
+            compileOnly "org.projectlombok:lombok"
+            annotationProcessor "org.projectlombok:lombok"
+            testCompileOnly "org.projectlombok:lombok"
+            testAnnotationProcessor "org.projectlombok:lombok"
+        }
+    }
+}
