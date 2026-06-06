@@ -1,3 +1,4 @@
 rootProject.name = "msa-board"
 
 include ":msa-board-common"
+include ":msa-board-support-infra"
