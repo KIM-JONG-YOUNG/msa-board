@@ -1,0 +1,33 @@
+configurations {
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
+dependencies {
+
+    // Internal
+    implementation project(":msa-board-common")
+
+    // WebMvc & WebFlux & Swagger
+    compileOnly "org.springframework.boot:spring-boot-starter-web"
+    compileOnly "org.springframework.boot:spring-boot-starter-webflux"
+    compileOnly "org.springdoc:springdoc-openapi-starter-webmvc-ui"
+    compileOnly "org.springdoc:springdoc-openapi-starter-webmvc-ui"
+
+    // Test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+    testImplementation "io.projectreactor:reactor-test"
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+test {
+    useJUnitPlatform()
+}
