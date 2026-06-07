@@ -1,5 +1,6 @@
 package com.jong.msaboard.support.web.controller;
 
+import com.jong.msaboard.support.web.condition.ConditionalOnWebMvc;
 import com.jong.msaboard.support.web.request.ValidateRequest;
 import com.jong.msaboard.support.web.validation.NullableNotBlank;
 import jakarta.validation.Valid;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Slf4j
 @RestController
+@ConditionalOnWebMvc
 @RequestMapping(value = "/api/mvc")
 public class WebMvcTestRestController {
 

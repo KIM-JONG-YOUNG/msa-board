@@ -1,14 +1,13 @@
 package com.jong.msaboard.support.web.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jong.msaboard.support.web.condition.ConditionalOnWebFlux;
 import com.jong.msaboard.support.web.error.SystemErrorCode;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
 import com.jong.msaboard.support.web.factory.ErrorResponseFactory;
 import com.jong.msaboard.support.web.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -25,9 +24,9 @@ import reactor.core.scheduler.Schedulers;
 
 @Slf4j
 @Component
+@ConditionalOnWebFlux
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ConditionalOnWebApplication(type = Type.REACTIVE)
 public class WebFluxErrorHandler implements WebExceptionHandler {
 
     private final ObjectMapper objectMapper;

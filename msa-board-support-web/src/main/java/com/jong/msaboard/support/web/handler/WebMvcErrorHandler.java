@@ -1,5 +1,6 @@
 package com.jong.msaboard.support.web.handler;
 
+import com.jong.msaboard.support.web.condition.ConditionalOnWebMvc;
 import com.jong.msaboard.support.web.error.SystemErrorCode;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
 import com.jong.msaboard.support.web.factory.ErrorResponseFactory;
@@ -7,8 +8,6 @@ import com.jong.msaboard.support.web.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication.Type;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -26,9 +25,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 @Slf4j
 @RestControllerAdvice
+@ConditionalOnWebMvc
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
-@ConditionalOnWebApplication(type = Type.SERVLET)
 public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ErrorCodeException.class)

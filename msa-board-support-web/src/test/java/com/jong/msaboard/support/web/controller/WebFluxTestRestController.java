@@ -1,5 +1,6 @@
 package com.jong.msaboard.support.web.controller;
 
+import com.jong.msaboard.support.web.condition.ConditionalOnWebFlux;
 import com.jong.msaboard.support.web.request.ValidateRequest;
 import com.jong.msaboard.support.web.validation.NullableNotBlank;
 import jakarta.validation.Valid;
@@ -17,6 +18,7 @@ import reactor.core.publisher.Mono;
 
 @Slf4j
 @RestController
+@ConditionalOnWebFlux
 @RequestMapping(value = "/api/flux")
 public class WebFluxTestRestController {
 
