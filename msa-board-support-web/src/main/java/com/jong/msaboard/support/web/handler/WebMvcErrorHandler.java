@@ -8,6 +8,7 @@ import com.jong.msaboard.support.web.response.ErrorResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
@@ -26,6 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @Slf4j
 @RestControllerAdvice
 @ConditionalOnWebMvc
+@ConditionalOnMissingBean(WebMvcSecurityErrorHandler.class)
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
@@ -38,10 +40,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
         log.warn(exception.getMessage());
         var path = request.getRequestURI();
         var errorCode = exception.errorCode();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
-        return ResponseEntity.status(errorResponse.status())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(errorResponse);
+        return toResponseEntity(ErrorResponseFactory.create(path, errorCode));
     }
 
     @Override
@@ -51,10 +50,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
     ) {
         var request = ((ServletWebRequest) webRequest).getRequest();
         var path = request.getRequestURI();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, exception);
-        return ResponseEntity.status(errorResponse.status())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(errorResponse);
+        return toResponseEntity(ErrorResponseFactory.create(path, exception));
     }
 
     @Override
@@ -64,10 +60,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
     ) {
         var request = ((ServletWebRequest) webRequest).getRequest();
         var path = request.getRequestURI();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, exception);
-        return ResponseEntity.status(errorResponse.status())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(errorResponse);
+        return toResponseEntity(ErrorResponseFactory.create(path, exception));
     }
 
     @Override
@@ -79,10 +72,7 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
         var request = ((ServletWebRequest) webRequest).getRequest();
         var path = request.getRequestURI();
         var errorCode = SystemErrorCode.from(statusCode, exception);
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
-        return ResponseEntity.status(errorResponse.status())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(errorResponse);
+        return toResponseEntity(ErrorResponseFactory.create(path, errorCode));
     }
 
     @ExceptionHandler(Exception.class)
@@ -93,10 +83,13 @@ public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
         log.error(exception.getMessage(), exception);
         var path = request.getRequestURI();
         var errorCode = SystemErrorCode.from(HttpStatus.INTERNAL_SERVER_ERROR, exception);
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
+        return toResponseEntity(ErrorResponseFactory.create(path, errorCode));
+    }
+
+    private <T> ResponseEntity<T> toResponseEntity(ErrorResponse errorResponse) {
         return ResponseEntity.status(errorResponse.status())
             .contentType(MediaType.APPLICATION_JSON)
-            .body(errorResponse);
+            .body((T) errorResponse);
     }
 
 }

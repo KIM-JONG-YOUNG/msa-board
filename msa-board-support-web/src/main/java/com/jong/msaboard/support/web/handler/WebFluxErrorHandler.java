@@ -8,6 +8,7 @@ import com.jong.msaboard.support.web.factory.ErrorResponseFactory;
 import com.jong.msaboard.support.web.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import reactor.core.scheduler.Schedulers;
 @Slf4j
 @Component
 @ConditionalOnWebFlux
+@ConditionalOnMissingBean(WebFluxSecurityErrorHandler.class)
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebFluxErrorHandler implements WebExceptionHandler {
@@ -52,8 +54,7 @@ public class WebFluxErrorHandler implements WebExceptionHandler {
         log.warn(exception.getMessage());
         var path = exchange.getRequest().getURI().getPath();
         var errorCode = exception.errorCode();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
-        return writeErrorResponse(exchange, errorResponse);
+        return write(exchange, ErrorResponseFactory.create(path, errorCode));
     }
 
     private Mono<Void> handleHandlerMethodValidationException(
@@ -61,8 +62,7 @@ public class WebFluxErrorHandler implements WebExceptionHandler {
         HandlerMethodValidationException exception
     ) {
         var path = exchange.getRequest().getURI().getPath();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, exception);
-        return writeErrorResponse(exchange, errorResponse);
+        return write(exchange, ErrorResponseFactory.create(path, exception));
     }
 
     private Mono<Void> handleWebExchangeBindException(
@@ -70,8 +70,7 @@ public class WebFluxErrorHandler implements WebExceptionHandler {
         WebExchangeBindException exception
     ) {
         var path = exchange.getRequest().getURI().getPath();
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, exception);
-        return writeErrorResponse(exchange, errorResponse);
+        return write(exchange, ErrorResponseFactory.create(path, exception));
     }
 
     private Mono<Void> handleErrorResponseException(
@@ -82,8 +81,7 @@ public class WebFluxErrorHandler implements WebExceptionHandler {
         var path = exchange.getRequest().getURI().getPath();
         var statusCode = exception.getStatusCode();
         var errorCode = SystemErrorCode.from(statusCode, exception);
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
-        return writeErrorResponse(exchange, errorResponse);
+        return write(exchange, ErrorResponseFactory.create(path, errorCode));
     }
 
     private Mono<Void> handleInternalException(
@@ -93,14 +91,10 @@ public class WebFluxErrorHandler implements WebExceptionHandler {
         log.error(throwable.getMessage(), throwable);
         var path = exchange.getRequest().getURI().getPath();
         var errorCode = SystemErrorCode.from(HttpStatus.INTERNAL_SERVER_ERROR, throwable);
-        var errorResponse = ErrorResponseFactory.createErrorResponse(path, errorCode);
-        return writeErrorResponse(exchange, errorResponse);
+        return write(exchange, ErrorResponseFactory.create(path, errorCode));
     }
 
-    protected Mono<Void> writeErrorResponse(
-        ServerWebExchange exchange,
-        ErrorResponse errorResponse
-    ) {
+    private Mono<Void> write(ServerWebExchange exchange, ErrorResponse errorResponse) {
         var response = exchange.getResponse();
         response.setStatusCode(HttpStatusCode.valueOf(errorResponse.status()));
         response.getHeaders().setContentType(MediaType.APPLICATION_JSON);

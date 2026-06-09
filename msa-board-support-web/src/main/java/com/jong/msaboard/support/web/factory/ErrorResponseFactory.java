@@ -10,7 +10,7 @@ import org.springframework.validation.method.MethodValidationResult;
 
 public final class ErrorResponseFactory {
 
-    public static ErrorResponse createErrorResponse(String path, ErrorCode errorCode) {
+    public static ErrorResponse create(String path, ErrorCode errorCode) {
         return ErrorResponse.builder()
             .path(path)
             .status(errorCode.status())
@@ -19,8 +19,8 @@ public final class ErrorResponseFactory {
             .build();
     }
 
-    public static ErrorResponse createErrorResponse(String path, BindingResult bindingResult) {
-        return createErrorResponse(path, ParamErrorCode.INVALID_PARAMETER)
+    public static ErrorResponse create(String path, BindingResult bindingResult) {
+        return create(path, ParamErrorCode.INVALID_PARAMETER)
             .withErrors(bindingResult.getAllErrors().stream()
                 .map(error -> Detail.builder()
                     .field(error instanceof FieldError fieldError ? fieldError.getField() : null)
@@ -29,8 +29,8 @@ public final class ErrorResponseFactory {
                 .toList());
     }
 
-    public static ErrorResponse createErrorResponse(String path, MethodValidationResult methodValidationResult) {
-        return createErrorResponse(path, ParamErrorCode.INVALID_PARAMETER)
+    public static ErrorResponse create(String path, MethodValidationResult methodValidationResult) {
+        return create(path, ParamErrorCode.INVALID_PARAMETER)
             .withErrors(methodValidationResult.getParameterValidationResults().stream()
                 .flatMap(validationResult -> validationResult.getResolvableErrors().stream()
                     .map(error -> Detail.builder()
