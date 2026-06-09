@@ -7,6 +7,8 @@ ext {
     embeddedRedisVersion = "0.7.2"
     springBootRedissonVersion = "3.52.0"
     springCloudVersion = "2025.0.2"
+    springDocOpenAPIUIVersion = "2.8.15"
+    jwtVersion = "0.13.0"
 }
 
 subprojects {
@@ -39,6 +41,11 @@ subprojects {
             dependencies {
                 dependency "it.ozimov:embedded-redis:${embeddedRedisVersion}"
                 dependency "org.redisson:redisson-spring-boot-starter:${springBootRedissonVersion}"
+                dependency "org.springdoc:springdoc-openapi-starter-webmvc-ui:${springDocOpenAPIUIVersion}"
+                dependency "org.springdoc:springdoc-openapi-starter-webflux-ui:${springDocOpenAPIUIVersion}"
+                dependency "io.jsonwebtoken:jjwt-api:${jwtVersion}"
+                dependency "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
+                dependency "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
             }
         }
 

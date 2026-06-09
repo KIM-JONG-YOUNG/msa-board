@@ -2,3 +2,4 @@ rootProject.name = "msa-board"
 
 include ":msa-board-common"
 include ":msa-board-support-infra"
+include ":msa-board-support-web"
