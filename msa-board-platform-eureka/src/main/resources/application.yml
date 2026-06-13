@@ -1,0 +1,14 @@
+server:
+  port: 8761
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: platform-eureka
+
+eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
