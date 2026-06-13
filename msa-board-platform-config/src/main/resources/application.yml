@@ -1,0 +1,18 @@
+server:
+  port: 8888
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+  application:
+    name: platform-config
+  config:
+    import: optional:file:.environments[.properties]
+  profiles:
+    active: native
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: ${CONFIG_LOCATION}
