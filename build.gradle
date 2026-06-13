@@ -6,7 +6,7 @@ plugins {
 ext {
     embeddedRedisVersion = "0.7.2"
     springBootRedissonVersion = "3.52.0"
-    springCloudVersion = "2025.0.2"
+    springCloudVersion = "2025.0.3"
     springDocOpenAPIUIVersion = "2.8.15"
     jwtVersion = "0.13.0"
 }
