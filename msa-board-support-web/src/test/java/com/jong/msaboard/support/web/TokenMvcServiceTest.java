@@ -5,11 +5,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.jong.msaboard.common.type.Group;
+import com.jong.msaboard.support.test.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.config.WebMvcConfig;
 import com.jong.msaboard.support.web.config.WebMvcSecurityConfig;
 import com.jong.msaboard.support.web.converter.SecretKeyConverter;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
-import com.jong.msaboard.support.web.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.handler.WebMvcSecurityErrorHandler;
 import com.jong.msaboard.support.web.service.TokenMvcService;
 import java.util.UUID;
@@ -45,7 +45,7 @@ import redis.embedded.RedisServer;
 })
 public class TokenMvcServiceTest {
 
-    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
+    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.createEmbeddedRedisServer();
 
     @Autowired
     TokenMvcService tokenMvcService;

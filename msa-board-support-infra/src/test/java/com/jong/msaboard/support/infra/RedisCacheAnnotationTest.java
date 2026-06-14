@@ -8,8 +8,8 @@ import static org.mockito.Mockito.verify;
 import com.jong.msaboard.support.infra.cache.RedisCacheable;
 import com.jong.msaboard.support.infra.cache.RedisEvict;
 import com.jong.msaboard.support.infra.config.RedisConfig;
-import com.jong.msaboard.support.infra.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.infra.service.RedisCacheAnnotationTestService;
+import com.jong.msaboard.support.test.factory.EmbeddedRedisServerFactory;
 import java.time.Duration;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
@@ -42,7 +42,7 @@ import redis.embedded.RedisServer;
 })
 public class RedisCacheAnnotationTest {
 
-    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
+    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.createEmbeddedRedisServer();
 
     @MockitoSpyBean
     RedisCacheAnnotationTestService redisCacheAnnotationTestService;

@@ -8,8 +8,8 @@ import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
 import co.elastic.clients.elasticsearch.core.bulk.IndexOperation;
 import com.jong.msaboard.support.infra.config.ElasticsearchConfig;
-import com.jong.msaboard.support.infra.factory.ElasticsearchContainerFactory;
 import com.jong.msaboard.support.infra.factory.ElasticsearchRequestFactory;
+import com.jong.msaboard.support.test.factory.ElasticsearchContainerFactory;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -38,7 +38,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public class ElasticsearchRequestFactoryTest {
 
     @Container
-    static ElasticsearchContainer elasticsearchContainer = ElasticsearchContainerFactory.create();
+    static ElasticsearchContainer elasticsearchContainer = ElasticsearchContainerFactory.createElasticsearchContainer();
 
     @Autowired
     ElasticsearchClient elasticsearchClient;

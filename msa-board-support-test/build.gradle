@@ -1,0 +1,31 @@
+configurations {
+    testImplementation {
+        extendsFrom compileOnly
+    }
+}
+
+dependencies {
+
+    // Elasticsearch Test Container
+    compileOnly "org.springframework.boot:spring-boot-testcontainers"
+    compileOnly "org.testcontainers:junit-jupiter"
+    compileOnly "org.testcontainers:elasticsearch"
+
+    // Embedded Redis
+    compileOnly "it.ozimov:embedded-redis"
+
+    // Test
+    testImplementation "org.springframework.boot:spring-boot-starter-test"
+}
+
+bootJar {
+    enabled = false
+}
+
+jar {
+    enabled = true
+}
+
+test {
+    useJUnitPlatform()
+}

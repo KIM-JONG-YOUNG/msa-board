@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @Slf4j
@@ -49,6 +50,15 @@ public class WebMvcSecurityErrorHandler implements AuthenticationEntryPoint, Acc
         var path = request.getRequestURI();
         var errorCode = SecurityErrorCode.NOT_ACCESSIBLE_URL;
         write(response, ErrorResponseFactory.create(path, errorCode));
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public void handleAccessDeniedException(
+        HttpServletRequest request,
+        HttpServletResponse response,
+        AccessDeniedException accessDeniedException
+    ) throws IOException, ServletException {
+        handle(request, response, accessDeniedException);
     }
 
     private void write(HttpServletResponse response, ErrorResponse errorResponse) throws IOException {

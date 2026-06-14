@@ -27,7 +27,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @RestControllerAdvice
 @ConditionalOnWebMvc
 @RequiredArgsConstructor
-@Order(Ordered.HIGHEST_PRECEDENCE)
+@Order(Ordered.HIGHEST_PRECEDENCE - 1)
 public class WebMvcErrorHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(ErrorCodeException.class)

@@ -2,13 +2,13 @@ package com.jong.msaboard.support.web;
 
 import com.jong.msaboard.common.constants.HeaderNames;
 import com.jong.msaboard.common.type.Group;
+import com.jong.msaboard.support.test.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.config.WebFluxConfig;
 import com.jong.msaboard.support.web.config.WebFluxSecurityConfig;
 import com.jong.msaboard.support.web.controller.WebFluxTestRestController;
 import com.jong.msaboard.support.web.converter.SecretKeyConverter;
 import com.jong.msaboard.support.web.error.ParamErrorCode;
 import com.jong.msaboard.support.web.error.SecurityErrorCode;
-import com.jong.msaboard.support.web.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.handler.WebFluxErrorHandler;
 import com.jong.msaboard.support.web.handler.WebFluxSecurityErrorHandler;
 import com.jong.msaboard.support.web.properties.TokenProperties;
@@ -58,7 +58,7 @@ import redis.embedded.RedisServer;
 })
 public class WebFluxTestRestControllerTest {
 
-    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
+    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.createEmbeddedRedisServer();
 
     @Autowired
     WebTestClient testClient;
