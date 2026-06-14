@@ -96,8 +96,7 @@ public class MemberRestController {
     @Operation(summary = "현재 회원 탈퇴")
     @PreAuthorize(SecurityExpressions.IS_AUTHENTICATED)
     @DeleteMapping(
-        value = "/me",
-        consumes = MediaType.APPLICATION_JSON_VALUE
+        value = "/me"
     )
     public ResponseEntity<Void> leaveCurrentMember(
         @AuthenticationPrincipal UUID memberId
