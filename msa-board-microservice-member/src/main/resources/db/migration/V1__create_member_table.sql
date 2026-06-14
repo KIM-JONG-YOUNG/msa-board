@@ -1,4 +1,4 @@
-CREATE TABLE tb_member
+CREATE TABLE `tb_member`
 (
     `id`                CHAR(36)    NOT NULL,
     `username`          VARCHAR(30) NOT NULL,
@@ -10,8 +10,8 @@ CREATE TABLE tb_member
     `created_date_time` datetime    NOT NULL,
     `updated_date_time` datetime    NOT NULL,
     `status`            TINYINT     NOT NULL,
-    CONSTRAINT pk_tb_member PRIMARY KEY (`id`)
+    CONSTRAINT `pk_tb_member` PRIMARY KEY (`id`)
 );
 
-ALTER TABLE tb_member
-    ADD CONSTRAINT uc_tb_member_username UNIQUE (`username`);
+ALTER TABLE `tb_member`
+    ADD CONSTRAINT `uc_tb_member_username` UNIQUE (`username`);
