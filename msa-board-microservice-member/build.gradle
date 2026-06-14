@@ -45,6 +45,7 @@ dependencies {
     runtimeOnly "org.mariadb.jdbc:mariadb-java-client"
 
     // Test
+    testImplementation project(":msa-board-support-test")
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.kafka:spring-kafka-test"
     testImplementation "it.ozimov:embedded-redis"

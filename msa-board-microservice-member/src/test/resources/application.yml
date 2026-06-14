@@ -5,6 +5,12 @@ server:
 
 spring:
 
+  cloud:
+    config:
+      enabled: false
+    discovery:
+      enabled: false
+
   web:
     resources:
       add-mappings: false
@@ -13,13 +19,13 @@ spring:
     virtual:
       enabled: true
 
-  data:
-    redis:
-      host: ${MICROSERVICE_MEMBER_REDIS_HOST}
-      port: ${MICROSERVICE_MEMBER_REDIS_PORT}
+  #  data:
+  #    redis:
+  #      host: ${MICROSERVICE_MEMBER_REDIS_HOST}
+  #      port: ${MICROSERVICE_MEMBER_REDIS_PORT}
 
   kafka:
-    bootstrap-servers: ${MICROSERVICE_MEMBER_KAFKA_BOOTSTRAP_SERVERS}
+    #    bootstrap-servers: ${MICROSERVICE_MEMBER_KAFKA_BOOTSTRAP_SERVERS}
     producer:
       acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
@@ -42,11 +48,18 @@ spring:
 
   datasource:
     hikari:
-      driver-class-name: org.mariadb.jdbc.Driver
-      jdbc-url: ${MICROSERVICE_MEMBER_DB_JDBC_URL}
-      username: ${MICROSERVICE_MEMBER_DB_USERNAME}
-      password: ${MICROSERVICE_MEMBER_DB_PASSWORD}
+      driver-class-name: org.h2.Driver
+      jdbc-url: jdbc:h2:mem:test;MODE=MySQL;DATABASE_TO_LOWER=TRUE;CASE_INSENSITIVE_IDENTIFIERS=TRUE
+      username: sa
+      password:
 
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-version: 0
+    baseline-on-migrate: true
+
+  
   jpa:
     hibernate:
       ddl-auto: validate
@@ -56,12 +69,6 @@ spring:
         globally_quoted_identifiers: true
         format_sql: true
         use_sql_comments: true
-
-  flyway:
-    enabled: true
-    locations: classpath:db/migration
-    baseline-version: 0
-    baseline-on-migrate: true
 
 springdoc:
   swagger-ui:
@@ -83,19 +90,10 @@ management:
           - env
           - configprops
 
-eureka:
-  client:
-    service-url:
-      defaultZone: ${MICROSERVICE_MEMBER_EUREKA_SERVICE_URL}
-  instance:
-    prefer-ip-address: true
-    instance-id: ${spring.application.name}(${spring.cloud.client.ip-address}:${server.port})
-    status-page-url: http://localhost:${server.port}/swagger-ui/index.html
-
 jwt:
   access-token:
-    secret-key: ${JWT_ACCESS_TOKEN_SECRET_KEY}
-    valid-duration: ${JWT_ACCESS_TOKEN_VALID_DURATION}
+    secret-key: accessTokenSecretKey
+    valid-duration: 60s
   refresh-token:
-    secret-key: ${JWT_REFRESH_TOKEN_SECRET_KEY}
-    valid-duration: ${JWT_REFRESH_TOKEN_VALID_DURATION}
+    secret-key: refreshTokenSecretKey
+    valid-duration: 60m
