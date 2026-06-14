@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+
+  msa-board-mariadb:
+    image: mariadb:10.11
+    container_name: msa-board-mariadb-member
+    hostname: msa-board-mariadb-member
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - 13306:3306
+    volumes:
+      - ./data:/var/lib/mysql
+    command:
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
+
