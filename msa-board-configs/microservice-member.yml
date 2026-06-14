@@ -65,14 +65,16 @@ springdoc:
   default-produces-media-type: application/json;charset=UTF-8
 
 management:
-  endpoint:
-    include:
-      - beans
-      - health
-      - info
-      - metrics
-      - env
-      - configprops
+  endpoints:
+    web:
+      exposure:
+        include:
+          - beans
+          - health
+          - info
+          - metrics
+          - env
+          - configprops
 
 eureka:
   client:
