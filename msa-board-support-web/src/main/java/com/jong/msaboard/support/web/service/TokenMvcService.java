@@ -9,9 +9,11 @@ import com.jong.msaboard.support.web.properties.TokenProperties;
 import com.jong.msaboard.support.web.utils.TokenUtils;
 import io.jsonwebtoken.ExpiredJwtException;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
+import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -31,54 +33,30 @@ public class TokenMvcService {
     private final RedisTemplate<String, String> redisTemplate;
 
     public String generateAccessToken(UUID memberId, Group memberGroup) {
-
-        var secretKey = tokenProperties.accessToken().secretKey();
-        var validDuration = tokenProperties.accessToken().validDuration();
-        var accessToken = TokenUtils.generateToken(memberId, memberGroup, secretKey, validDuration);
-
-        var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-        var whitelistTokenCacheDuration = Duration.ofMillis(Math.max(
-            redisTemplate.getExpire(whitelistTokenCacheKey, TimeUnit.MILLISECONDS),
-            validDuration.toMillis()
-        ));
-        redisTemplate.opsForSet().add(whitelistTokenCacheKey, accessToken);
-        redisTemplate.expire(whitelistTokenCacheKey, whitelistTokenCacheDuration);
-
+        var accessToken = TokenUtils.generateToken(memberId, memberGroup,
+            tokenProperties.accessToken().secretKey(),
+            tokenProperties.accessToken().validDuration());
+        addWhitelistToken(accessToken, tokenProperties.accessToken().secretKey());
         return accessToken;
     }
 
     public String generateRefreshToken(UUID memberId) {
-
-        var secretKey = tokenProperties.refreshToken().secretKey();
-        var validDuration = tokenProperties.refreshToken().validDuration();
-        var refreshToken = TokenUtils.generateToken(memberId, null, secretKey, validDuration);
-
-        var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-        var whitelistTokenCacheDuration = Duration.ofMillis(Math.max(
-            redisTemplate.getExpire(whitelistTokenCacheKey, TimeUnit.MILLISECONDS),
-            validDuration.toMillis()
-        ));
-        redisTemplate.opsForSet().add(whitelistTokenCacheKey, refreshToken);
-        redisTemplate.expire(whitelistTokenCacheKey, whitelistTokenCacheDuration);
-
+        var refreshToken = TokenUtils.generateToken(memberId, null,
+            tokenProperties.refreshToken().secretKey(),
+            tokenProperties.refreshToken().validDuration());
+        addWhitelistToken(refreshToken, tokenProperties.refreshToken().secretKey());
         return refreshToken;
     }
 
     public Authentication getAuthenticationFromAccessToken(String accessToken) {
         try {
-
-            var secretKey = tokenProperties.accessToken().secretKey();
-            var memberId = TokenUtils.getMemberId(accessToken, secretKey);
-            var memberGroup = TokenUtils.getMemberGroup(accessToken, secretKey);
-
-            var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-            if (!redisTemplate.opsForSet().isMember(whitelistTokenCacheKey, accessToken)) {
-                throw new RevokedJwtException("취소된 Access Token 입니다.");
+            var memberId = TokenUtils.getMemberId(accessToken, tokenProperties.accessToken().secretKey());
+            var memberGroup = TokenUtils.getMemberGroup(accessToken, tokenProperties.accessToken().secretKey());
+            if (existsWhitelistToken(accessToken, tokenProperties.accessToken().secretKey())) {
+                var authorities = Set.of(new SimpleGrantedAuthority("ROLE_" + memberGroup.name()));
+                return new UsernamePasswordAuthenticationToken(memberId, null, authorities);
             }
-
-            var authorities = Set.of(new SimpleGrantedAuthority("ROLE_" + memberGroup.name()));
-            return new UsernamePasswordAuthenticationToken(memberId, null, authorities);
-
+            throw new RevokedJwtException("취소된 Access Token 입니다.");
         } catch (RevokedJwtException e) {
             throw SecurityErrorCode.REVOKED_ACCESS_TOKEN.toException();
         } catch (ExpiredJwtException e) {
@@ -90,17 +68,11 @@ public class TokenMvcService {
 
     public UUID getMemberIdFromRefreshToken(String refreshToken) {
         try {
-
-            var secretKey = tokenProperties.refreshToken().secretKey();
-            var memberId = TokenUtils.getMemberId(refreshToken, secretKey);
-
-            var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-            if (!redisTemplate.opsForSet().isMember(whitelistTokenCacheKey, refreshToken)) {
-                throw new RevokedJwtException("취소된 Access Token 입니다.");
+            var memberId = TokenUtils.getMemberId(refreshToken, tokenProperties.refreshToken().secretKey());
+            if (existsWhitelistToken(refreshToken, tokenProperties.refreshToken().secretKey())) {
+                return memberId;
             }
-
-            return memberId;
-
+            throw new RevokedJwtException("취소된 Refresh Token 입니다.");
         } catch (RevokedJwtException e) {
             throw SecurityErrorCode.REVOKED_REFRESH_TOKEN.toException();
         } catch (ExpiredJwtException e) {
@@ -112,13 +84,7 @@ public class TokenMvcService {
 
     public void revokeAccessToken(String accessToken) {
         try {
-
-            var secretKey = tokenProperties.accessToken().secretKey();
-            var memberId = TokenUtils.getMemberId(accessToken, secretKey);
-
-            var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-            redisTemplate.opsForSet().remove(whitelistTokenCacheKey, accessToken);
-
+            removeWhitelistToken(accessToken, tokenProperties.accessToken().secretKey());
         } catch (ExpiredJwtException e) {
             log.warn("이미 만료된 Access Token 입니다.");
         } catch (Exception e) {
@@ -128,13 +94,7 @@ public class TokenMvcService {
 
     public void revokeRefreshToken(String refreshToken) {
         try {
-
-            var secretKey = tokenProperties.refreshToken().secretKey();
-            var memberId = TokenUtils.getMemberId(refreshToken, secretKey);
-
-            var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-            redisTemplate.opsForSet().remove(whitelistTokenCacheKey, refreshToken);
-
+            removeWhitelistToken(refreshToken, tokenProperties.refreshToken().secretKey());
         } catch (ExpiredJwtException e) {
             log.warn("이미 만료된 Refresh Token 입니다.");
         } catch (Exception e) {
@@ -142,9 +102,28 @@ public class TokenMvcService {
         }
     }
 
-    public void revokeMemberTokenAll(UUID memberId) {
+    private void addWhitelistToken(String token, SecretKey secretKey) {
+        var memberId = TokenUtils.getMemberId(token, secretKey);
+        var expiration = TokenUtils.getExpiration(token, secretKey);
         var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
-        redisTemplate.delete(whitelistTokenCacheKey);
+        var whitelistTokenCacheDuration = Duration.ofMillis(Math.max(
+            redisTemplate.getExpire(whitelistTokenCacheKey, TimeUnit.MILLISECONDS),
+            Duration.between(LocalDateTime.now(), expiration).toMillis()
+        ));
+        redisTemplate.opsForSet().add(whitelistTokenCacheKey, token);
+        redisTemplate.expire(whitelistTokenCacheKey, whitelistTokenCacheDuration);
+    }
+
+    private boolean existsWhitelistToken(String token, SecretKey secretKey) {
+        var memberId = TokenUtils.getMemberId(token, secretKey);
+        var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
+        return redisTemplate.opsForSet().isMember(whitelistTokenCacheKey, token);
+    }
+
+    private void removeWhitelistToken(String token, SecretKey secretKey) {
+        var memberId = TokenUtils.getMemberId(token, secretKey);
+        var whitelistTokenCacheKey = RedisKeyPrefixes.WHITELIST_TOKEN_PREFIX + memberId;
+        redisTemplate.opsForSet().remove(whitelistTokenCacheKey, token);
     }
 
 }

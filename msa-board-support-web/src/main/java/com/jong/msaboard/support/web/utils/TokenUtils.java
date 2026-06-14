@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 import javax.crypto.SecretKey;
@@ -51,6 +53,11 @@ public final class TokenUtils {
         } catch (Exception e) {
             throw new JwtException("Token 상의 회원 그룹 정보가 유효하지 않습니다.", e);
         }
+    }
+
+    public static LocalDateTime getExpiration(String token, SecretKey secretKey) {
+        var claims = getClaims(token, secretKey);
+        return claims.getExpiration().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
     }
 
 }

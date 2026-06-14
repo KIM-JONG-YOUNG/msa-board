@@ -79,7 +79,7 @@ public class WebMvcTestRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @PreAuthorize(SecurityExpressions.IS_ADMIN_OR_USER)
+    @PreAuthorize(SecurityExpressions.IS_AUTHENTICATED)
     @GetMapping(
         value = "/security/user"
     )

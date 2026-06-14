@@ -10,6 +10,7 @@ import com.jong.msaboard.support.web.config.WebMvcSecurityConfig;
 import com.jong.msaboard.support.web.converter.SecretKeyConverter;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
 import com.jong.msaboard.support.web.factory.EmbeddedRedisServerFactory;
+import com.jong.msaboard.support.web.handler.WebMvcSecurityErrorHandler;
 import com.jong.msaboard.support.web.service.TokenMvcService;
 import java.util.UUID;
 import org.junit.jupiter.api.AfterAll;
@@ -31,6 +32,7 @@ import redis.embedded.RedisServer;
 @ContextConfiguration(classes = {
     WebMvcConfig.class,
     WebMvcSecurityConfig.class,
+    WebMvcSecurityErrorHandler.class,
     SecretKeyConverter.class,
     TokenMvcService.class
 })
@@ -94,28 +96,6 @@ public class TokenMvcServiceTest {
 
         tokenMvcService.revokeRefreshToken(refreshToken);
         assertThrows(ErrorCodeException.class, () -> tokenMvcService.getMemberIdFromRefreshToken(refreshToken));
-    }
-
-
-    @Test
-    void 회원_Token_전체_취소() {
-
-        var memberId = UUID.randomUUID();
-        var memberGroup = Group.ADMIN;
-
-        var accessToken = assertDoesNotThrow(() -> tokenMvcService.generateAccessToken(memberId, memberGroup));
-        var refreshToken = assertDoesNotThrow(() -> tokenMvcService.generateRefreshToken(memberId));
-
-        assertDoesNotThrow(() -> {
-            tokenMvcService.getAuthenticationFromAccessToken(accessToken);
-            tokenMvcService.getMemberIdFromRefreshToken(refreshToken);
-        });
-
-        tokenMvcService.revokeMemberTokenAll(memberId);
-        assertThrows(ErrorCodeException.class, () -> {
-            tokenMvcService.getAuthenticationFromAccessToken(accessToken);
-            tokenMvcService.getMemberIdFromRefreshToken(refreshToken);
-        });
     }
 
 }

@@ -9,6 +9,7 @@ import com.jong.msaboard.support.web.config.WebFluxSecurityConfig;
 import com.jong.msaboard.support.web.converter.SecretKeyConverter;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
 import com.jong.msaboard.support.web.factory.EmbeddedRedisServerFactory;
+import com.jong.msaboard.support.web.handler.WebFluxSecurityErrorHandler;
 import com.jong.msaboard.support.web.properties.TokenProperties;
 import com.jong.msaboard.support.web.service.TokenFluxService;
 import com.jong.msaboard.support.web.utils.TokenUtils;
@@ -37,6 +38,7 @@ import redis.embedded.RedisServer;
 @ContextConfiguration(classes = {
     WebFluxConfig.class,
     WebFluxSecurityConfig.class,
+    WebFluxSecurityErrorHandler.class,
     SecretKeyConverter.class,
     TokenFluxService.class
 })
