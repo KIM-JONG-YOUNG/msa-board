@@ -8,7 +8,6 @@ import com.jong.msaboard.support.web.factory.ErrorResponseFactory;
 import com.jong.msaboard.support.web.response.ErrorResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -26,7 +25,6 @@ import reactor.core.scheduler.Schedulers;
 @Slf4j
 @Component
 @ConditionalOnWebFlux
-@ConditionalOnMissingBean(WebFluxSecurityErrorHandler.class)
 @RequiredArgsConstructor
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class WebFluxErrorHandler implements WebExceptionHandler {
