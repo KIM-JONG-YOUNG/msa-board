@@ -38,3 +38,6 @@ out/
 
 ### Environment ###
 .environments
+
+### Docker ###
+msa-board-containers/*/data
