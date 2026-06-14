@@ -1,0 +1,92 @@
+server:
+  error:
+    whitelabel:
+      enabled: false
+
+spring:
+
+  web:
+    resources:
+      add-mappings: false
+
+  threads:
+    virtual:
+      enabled: true
+
+  data:
+    redis:
+      host: ${MICROSERVICE_MEMBER_REDIS_HOST}
+      port: ${MICROSERVICE_MEMBER_REDIS_PORT}
+
+  kafka:
+    bootstrap-servers: ${MICROSERVICE_MEMBER_KAFKA_BOOTSTRAP_SERVERS}
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+      properties:
+        max.block.ms: 3000
+        request.timeout.ms: 30000
+        delivery.timeout.ms: 60000
+        retry.backoff.ms: 1000
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      enable-auto-commit: false
+      properties:
+        retry.backoff.ms: 1000
+    listener:
+      ack-mode: record
+
+  datasource:
+    hikari:
+      driver-class-name: org.mariadb.jdbc.Driver
+      jdbc-url: ${MICROSERVICE_MEMBER_DB_JDBC_URL}
+      username: ${MICROSERVICE_MEMBER_DB_USERNAME}
+      password: ${MICROSERVICE_MEMBER_DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        globally_quoted_identifiers: true
+        format_sql: true
+        use_sql_comments: true
+
+springdoc:
+  swagger-ui:
+    tags-sorter: alpha
+    operations-sorter: alpha
+    display-request-duration: true
+  default-consumes-media-type: application/json;charset=UTF-8
+  default-produces-media-type: application/json;charset=UTF-8
+
+management:
+  endpoint:
+    include:
+      - beans
+      - health
+      - info
+      - metrics
+      - env
+      - configprops
+
+eureka:
+  client:
+    service-url:
+      defaultZone: ${MICROSERVICE_MEMBER_EUREKA_SERVICE_URL}
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}(${spring.cloud.client.ip-address}:${server.port})
+    status-page-url: http://localhost:${server.port}/swagger-ui/index.html
+
+jwt:
+  access-token:
+    secret-key: ${JWT_ACCESS_TOKEN_SECRET_KEY}
+    valid-duration: ${JWT_ACCESS_TOKEN_VALID_DURATION}
+  refresh-token:
+    secret-key: ${JWT_REFRESH_TOKEN_SECRET_KEY}
+    valid-duration: ${JWT_REFRESH_TOKEN_VALID_DURATION}

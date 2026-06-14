@@ -1,0 +1,10 @@
+server:
+  port: 8001
+
+spring:
+  application:
+    name: microservice-member
+  config:
+    import:
+      - optional:file:.environments[.properties]
+      - optional:configserver:http://localhost:8888
