@@ -1,0 +1,182 @@
+version: "3.8"
+
+services:
+
+  msa-board-redis-cluster-node-1:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-1
+    hostname: msa-board-redis-cluster-node-1
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.10
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.10
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-1:/data
+
+  msa-board-redis-cluster-node-2:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-2
+    hostname: msa-board-redis-cluster-node-2
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.20
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.20
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-2:/data
+
+  msa-board-redis-cluster-node-3:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-3
+    hostname: msa-board-redis-cluster-node-3
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.30
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.30
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-3:/data
+
+  msa-board-redis-cluster-node-4:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-4
+    hostname: msa-board-redis-cluster-node-4
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.40
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.40
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-4:/data
+
+  msa-board-redis-cluster-node-5:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-5
+    hostname: msa-board-redis-cluster-node-5
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.50
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.50
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-5:/data
+
+  msa-board-redis-cluster-node-6:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-node-6
+    hostname: msa-board-redis-cluster-node-6
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.60
+    environment:
+      - TZ=Asia/Seoul
+      - LC_ALL=C.UTF-8
+    entrypoint: |
+      redis-server 
+        --appendonly yes
+        --cluster-enabled yes
+        --cluster-config-file nodes.conf
+        --cluster-node-timeout 3000
+        --cluster-announce-ip 10.10.0.60
+        --cluster-announce-port 6379
+        --cluster-announce-bus-port 16379
+    volumes:
+      - ./data/msa-board-redis-cluster-node-6:/data
+
+  msa-board-redis-cluster-init:
+    image: redis:7.2
+    container_name: msa-board-redis-cluster-init
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.100
+    depends_on:
+      - msa-board-redis-cluster-node-1
+      - msa-board-redis-cluster-node-2
+      - msa-board-redis-cluster-node-3
+      - msa-board-redis-cluster-node-4
+      - msa-board-redis-cluster-node-5
+      - msa-board-redis-cluster-node-6
+    entrypoint: |
+      redis-cli 
+        --cluster create
+          10.10.0.10:6379
+          10.10.0.20:6379
+          10.10.0.30:6379
+          10.10.0.40:6379
+          10.10.0.50:6379
+          10.10.0.60:6379
+        --cluster-replicas 1
+        --cluster-yes
+
+  msa-board-redis-cluster-predixy:
+    image: haandol/predixy:latest
+    container_name: msa-board-redis-cluster-predixy
+    hostname: msa-board-redis-cluster-predixy
+    ports:
+      - 17617:7617
+    depends_on:
+      - msa-board-redis-cluster-init
+    networks:
+      msa-board-redis-cluster-network:
+        ipv4_address: 10.10.0.200
+    volumes:
+      - ./predixy-conf/cluster.conf:/etc/predixy/conf/cluster.conf
+
+networks:
+  msa-board-redis-cluster-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.10.0.0/24
