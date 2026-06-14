@@ -33,6 +33,7 @@ dependencies {
     compileOnly "org.springframework.cloud:spring-cloud-starter-openfeign"
 
     // Test
+    testImplementation project(":msa-board-support-test")
     testImplementation "org.springframework.boot:spring-boot-starter-test"
     testImplementation "org.springframework.boot:spring-boot-testcontainers"
     testImplementation "org.springframework.kafka:spring-kafka-test"

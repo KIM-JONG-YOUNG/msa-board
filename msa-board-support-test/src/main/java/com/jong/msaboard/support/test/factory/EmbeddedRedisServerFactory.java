@@ -1,4 +1,4 @@
-package com.jong.msaboard.support.web.factory;
+package com.jong.msaboard.support.test.factory;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,7 +9,7 @@ import redis.embedded.util.OS;
 
 public class EmbeddedRedisServerFactory {
 
-    public static RedisServer create() {
+    public static RedisServer createEmbeddedRedisServer() {
         try (ServerSocket socket = new ServerSocket(0)) {
             socket.setReuseAddress(true);
             return RedisServer.builder()

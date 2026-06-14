@@ -4,9 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.jong.msaboard.support.infra.config.JpaConfig;
 import com.jong.msaboard.support.infra.config.RedisConfig;
-import com.jong.msaboard.support.infra.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.infra.service.LockTransactionalTestService;
 import com.jong.msaboard.support.infra.transaction.LockTransactional;
+import com.jong.msaboard.support.test.factory.EmbeddedRedisServerFactory;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.stream.IntStream;
@@ -54,7 +54,7 @@ import redis.embedded.RedisServer;
 })
 public class LockTransactionalTest {
 
-    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
+    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.createEmbeddedRedisServer();
 
     @Autowired
     LockTransactionalTestService lockTransactionalTestService;

@@ -4,11 +4,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.jong.msaboard.common.constants.RedisKeyPrefixes;
 import com.jong.msaboard.common.type.Group;
+import com.jong.msaboard.support.test.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.config.WebFluxConfig;
 import com.jong.msaboard.support.web.config.WebFluxSecurityConfig;
 import com.jong.msaboard.support.web.converter.SecretKeyConverter;
 import com.jong.msaboard.support.web.exception.ErrorCodeException;
-import com.jong.msaboard.support.web.factory.EmbeddedRedisServerFactory;
 import com.jong.msaboard.support.web.handler.WebFluxSecurityErrorHandler;
 import com.jong.msaboard.support.web.properties.TokenProperties;
 import com.jong.msaboard.support.web.service.TokenFluxService;
@@ -51,7 +51,7 @@ import redis.embedded.RedisServer;
 })
 public class TokenFluxServiceTest {
 
-    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.create();
+    static final RedisServer REDIS_SERVER = EmbeddedRedisServerFactory.createEmbeddedRedisServer();
 
     @Autowired
     TokenFluxService tokenFluxService;
